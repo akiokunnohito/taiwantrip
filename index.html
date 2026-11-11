@@ -180,6 +180,28 @@ p{margin:0 0 var(--space-2)}
 .weather-hour__desc{font-size:10px;line-height:14px;color:var(--secondary-label);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:560px){.weather-hours{grid-template-columns:repeat(4,minmax(0,1fr))}.weather-hour{padding:var(--space-2)}}
 
+/* Phrases */
+.chips{position:sticky;top:var(--navbar-h,0px);z-index:900;display:flex;gap:var(--space-2);overflow-x:auto;scrollbar-width:none;margin:0 calc(-1 * var(--space-4)) var(--space-3);padding:var(--space-2) var(--space-4);background:var(--system-grouped-background)}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:var(--hit);padding:0 var(--space-4);border-radius:var(--radius-capsule);background:var(--tertiary-system-fill);color:var(--label);font:600 15px/20px var(--font-sans);border:0;cursor:pointer}
+.chip[aria-selected="true"]{background:var(--tint);color:var(--on-accent)}
+.chip--sos{color:var(--destructive)}
+.chip--sos[aria-selected="true"]{background:var(--destructive);color:var(--on-destructive)}
+.chip:active{opacity:.7}
+.ipa-guide summary{font-weight:600;cursor:pointer;min-height:24px}
+.ipa-guide ul{margin:var(--space-2) 0 0;padding-left:1.2em}
+.phrase{align-items:center}
+.phrase__zh{font-size:22px;line-height:28px;font-weight:700;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",var(--font-sans)}
+.phrase__kana{font-size:20px;line-height:30px;margin-top:4px;font-weight:600;color:var(--tint);word-spacing:.3em}
+.phrase__ipa{font-size:15px;line-height:20px;color:var(--secondary-label);font-family:"Charis SIL","Doulos SIL","Gentium Plus","Noto Sans","Segoe UI","Lucida Grande",var(--font-sans);overflow-wrap:anywhere}
+.phrase__kana ruby{ruby-position:over}
+.phrase__kana rt{font-size:15px;line-height:16px;font-weight:700;color:var(--secondary-label);font-family:var(--font-sans)}
+.phrase-legend{margin:0 0 var(--space-2)}
+.phrase .caption{margin-top:var(--space-1)}
+.play{flex:none;width:var(--hit);height:var(--hit);border-radius:50%;border:0;background:var(--accent-tint-fill);color:var(--tint);font-size:15px;cursor:pointer;display:grid;place-items:center}
+.play:active{opacity:.7}
+.play[data-speaking]{background:var(--tint);color:var(--on-accent)}
+
 /* Footer */
 .footer{margin:var(--space-8) var(--space-4) 0;font-size:12px;line-height:16px;color:var(--secondary-label)}
 .footer a{color:var(--tint)}
@@ -199,6 +221,7 @@ p{margin:0 0 var(--space-2)}
     <a class="tab" role="tab" href="#day3">Day3</a>
     <a class="tab" role="tab" href="#transit">移動</a>
     <a class="tab" role="tab" href="#souvenir">お土産</a>
+    <a class="tab" role="tab" href="#phrase">会話</a>
     <a class="tab" role="tab" href="#weather">天気</a>
   </nav>
 </header>
@@ -490,6 +513,34 @@ p{margin:0 0 var(--space-2)}
   <div class="group"><div class="row"><div class="row__main"><div class="row__sub">パイナップルケーキ、台湾茶のティーバッグ（東方美人茶など）、ヌガークラッカー、ドライマンゴー、沙茶醤</div></div></div></div>
 </section>
 
+<!-- ========== 会話 ========== -->
+<section class="panel" id="phrase" aria-label="会話">
+  <h1 class="large-title">会話</h1>
+  <details class="banner banner--info ipa-guide"><summary>読み方の約束</summary>
+    <ul>
+      <li>台湾華語の発音。各音節の上の矢印が声調：→ 高く平ら（1声）／↗ 上げる（2声）／↓ 低く抑える（3声）／↘ 高から下げる（4声）／· 軽く短く</li>
+      <li>かなは目安。濁音（バ・ダ・ガ・ザ・ジ）は息を出さない音、清音（パ・タ・カ・ツ・チ）は息を強く出す音。細かい音は下の小さいIPAで</li>
+      <li>3声は台湾式に低く抑えるだけ。文末でも上げなくて通じる</li>
+      <li>変調は反映済み（3声＋3声→2声、不・一の変調）。書いてある通りに言えばよい</li>
+      <li>そり舌音（zh ch sh）は、台湾の普段の発音どおり ts tsʰ s で書いている。ɨ は「ス」「ツ」の母音を口を横に引かずに言う音</li>
+      <li>ʰ が付いた音（pʰ tʰ kʰ tsʰ tɕʰ）は息を強く。付かない p t k は日本語の濁音に近く聞こえる</li>
+      <li>ɕ は「シ」、tɕ は「チ」に近い。y は「イ」の口で唇を丸める。ɤ は唇を丸めない「オ」（喉の奥で「ウ」と「オ」の間）</li>
+    </ul>
+  </details>
+  <div class="chips" role="tablist" aria-label="カテゴリ">
+    <button type="button" class="chip chip--sos" role="tab" data-cat="sos">緊急・トイレ</button>
+    <button type="button" class="chip" role="tab" data-cat="greet">あいさつ</button>
+    <button type="button" class="chip" role="tab" data-cat="num">数・お金</button>
+    <button type="button" class="chip" role="tab" data-cat="places">地名</button>
+    <button type="button" class="chip" role="tab" data-cat="transit">移動</button>
+    <button type="button" class="chip" role="tab" data-cat="food">食事</button>
+    <button type="button" class="chip" role="tab" data-cat="shop">買い物</button>
+  </div>
+  <p class="footnote phrase-legend">→ 高く平ら　↗ 上げる　↓ 低く　↘ 下げる　· 軽く</p>
+  <div id="phrase-list" role="tabpanel"></div>
+  <p class="group-footer" id="phrase-tts-note">▶で端末の音声合成（中国語・台湾）が読み上げます。声と精度は端末によって違います。</p>
+</section>
+
 <!-- ========== 天気 ========== -->
 <section class="panel" id="weather" aria-label="天気">
   <h1 class="large-title">天気</h1>
@@ -589,6 +640,272 @@ const CHECKS={
  local:[["ubike-reg","YouBike「Single Rental」登録（11/12に。120時間有効）"]]
 };
 
+/* [中国語, IPA, かな, 日本語訳, 補足]。["#", 見出し] で小見出し。IPAは変調後の実際の発音 */
+const PHRASES={
+ sos:[
+  ["#","トイレ"],
+  ["廁所在哪裡？","tsʰɤ˥˩ swo˨˩ tsaɪ˥˩ na˧˥ li˨˩","ツァ スオ ザイ ナー リー","トイレはどこですか"],
+  ["洗手間在哪裡？","ɕi˧˥ ʂoʊ˨˩ tɕjɛn˥ tsaɪ˥˩ na˧˥ li˨˩","シー ソウ ジェン ザイ ナー リー","お手洗いはどこですか","お店や駅ではこちらが少し丁寧"],
+  ["可以借廁所嗎？","kʰɤ˧˥ i˨˩ tɕjɛ˥˩ tsʰɤ˥˩ swo˨˩ ma˧","クァ イー ジエ ツァ スオ マ","トイレを借りてもいいですか"],
+  ["#","トイレの表示"],
+  ["男廁","nan˧˥ tsʰɤ˥˩","ナン ツァ","男子トイレ","表示は「男」の字だけのことも多い"],
+  ["衛生紙","weɪ˥˩ ʂəŋ˥ ʈʂɻ̩˨˩","ウェイ ソン ズー","トイレットペーパー","今は流してよいトイレが多い。ゴミ箱が置いてあったり「流さないで」と書いてあればそれに従う"],
+  ["#","体調"],
+  ["我不舒服。","wo˨˩ pu˥˩ ʂu˥ fu˧","ウォ ブー スー フ","具合が悪いです"],
+  ["我肚子痛。","wo˨˩ tu˥˩ tsɹ̩˧ tʰʊŋ˥˩","ウォ ドゥー ズ トン","お腹が痛いです"],
+  ["我頭痛。","wo˨˩ tʰoʊ˧˥ tʰʊŋ˥˩","ウォ トウ トン","頭が痛いです"],
+  ["我發燒了。","wo˨˩ fa˥ ʂaʊ˥ lɤ˧","ウォ ファー サオ ラ","熱があります"],
+  ["藥局在哪裡？","jaʊ˥˩ tɕy˧˥ tsaɪ˥˩ na˧˥ li˨˩","ヤオ ジュー ザイ ナー リー","薬局はどこですか","看板は「藥局」「藥房」"],
+  ["請帶我去醫院。","tɕʰiŋ˨˩ taɪ˥˩ wo˨˩ tɕʰy˥˩ i˥ ɥɛn˥˩","チン ダイ ウォ チュー イー ユエン","病院に連れて行ってください"],
+  ["#","助けを呼ぶ"],
+  ["救命！","tɕjoʊ˥˩ miŋ˥˩","ジウ ミン","助けて！"],
+  ["請幫我叫救護車。","tɕʰiŋ˨˩ pɑŋ˥ wo˨˩ tɕjaʊ˥˩ tɕjoʊ˥˩ xu˥˩ ʈʂʰɤ˥","チン バン ウォ ジャオ ジウ フー ツァ","救急車を呼んでください"],
+  ["請幫我叫警察。","tɕʰiŋ˨˩ pɑŋ˥ wo˨˩ tɕjaʊ˥˩ tɕiŋ˨˩ ʈʂʰa˧˥","チン バン ウォ ジャオ ジン ツァー","警察を呼んでください"],
+  ["#","トラブル"],
+  ["我迷路了。","wo˨˩ mi˧˥ lu˥˩ lɤ˧","ウォ ミー ルー ラ","道に迷いました"],
+  ["我的護照不見了。","wo˨˩ tɤ˧ xu˥˩ ʈʂaʊ˥˩ pu˧˥ tɕjɛn˥˩ lɤ˧","ウォ ダ フー ザオ ブー ジエン ラ","パスポートをなくしました"],
+  ["我的錢包被偷了。","wo˨˩ tɤ˧ tɕʰjɛn˧˥ paʊ˥ peɪ˥˩ tʰoʊ˥ lɤ˧","ウォ ダ チエン バオ ベイ トウ ラ","財布を盗まれました"],
+  ["我是日本人。","wo˨˩ ʂɻ̩˥˩ ɻ̩˥˩ pən˨˩ ɻən˧˥","ウォ スー リー ベン レン","日本人です"],
+  ["有人會說日文嗎？","joʊ˨˩ ɻən˧˥ xweɪ˥˩ ʂwo˥ ɻ̩˥˩ wən˧˥ ma˧","ヨウ レン フイ スオ リー ウェン マ","日本語を話せる人はいますか"],
+  ["我聽不懂。","wo˨˩ tʰiŋ˥ pu˥˩ tʊŋ˨˩","ウォ ティン ブー ドン","わかりません（聞き取れません）"],
+  ["請說慢一點。","tɕʰiŋ˨˩ ʂwo˥ man˥˩ i˥˩ tjɛn˨˩","チン スオ マン イー ディエン","ゆっくり話してください"],
+  ["請寫下來。","tɕʰiŋ˧˥ ɕjɛ˨˩ ɕja˥˩ laɪ˧˥","チン シエ シャー ライ","書いてください"]],
+ places:[
+  ["#","街・エリア"],
+  ["台灣","tʰaɪ˧˥ wan˥","タイ ワン","台湾"],
+  ["台北","tʰaɪ˧˥ peɪ˨˩","タイ ベイ","台北"],
+  ["萬華","wan˥˩ xwa˧˥","ワン ホワ","萬華（ホテルのある区）"],
+  ["西門町","ɕi˥ mən˧˥ tiŋ˥","シー メン ディン","西門町"],
+  ["九份","tɕjoʊ˨˩ fən˥˩","ジウ フェン","九份"],
+  ["金瓜石","tɕin˥ kwa˥ ʂɻ̩˧˥","ジン グア スー","金瓜石","965番バスの行き先表示"],
+  ["#","駅・交通"],
+  ["桃園機場","tʰaʊ˧˥ ɥɛn˧˥ tɕi˥ ʈʂʰɑŋ˨˩","タオ ユエン ジー ツァン","桃園空港"],
+  ["台北車站","tʰaɪ˧˥ peɪ˨˩ ʈʂʰɤ˥ ʈʂan˥˩","タイ ベイ ツァ ザン","台北駅"],
+  ["捷運","tɕjɛ˧˥ yn˥˩","ジエ ユン","MRT（地下鉄）"],
+  ["捷運西門站","tɕjɛ˧˥ yn˥˩ ɕi˥ mən˧˥ ʈʂan˥˩","ジエ ユン シー メン ザン","MRT西門駅","965番バス停の名前もこれ"],
+  ["#","ホテル"],
+  ["克曼旅館","kʰɤ˥˩ man˥˩ ly˧˥ kwan˨˩","クァ マン リュー グアン","COMMA BOUTIQUE HOTEL","タクシーでは住所と一緒に見せる"],
+  ["西寧南路","ɕi˥ niŋ˧˥ nan˧˥ lu˥˩","シー ニン ナン ルー","西寧南路（ホテルの通り）"],
+  ["#","スポット"],
+  ["華西街夜市","xwa˧˥ ɕi˥ tɕjɛ˥ jɛ˥˩ ʂɻ̩˥˩","ホワ シー ジエ イエ スー","華西街夜市"],
+  ["龍山寺","lʊŋ˧˥ ʂan˥ sɹ̩˥˩","ロン サン スー","龍山寺"],
+  ["寧夏夜市","niŋ˧˥ ɕja˥˩ jɛ˥˩ ʂɻ̩˥˩","ニン シャー イエ スー","寧夏夜市"],
+  ["總統府","tsʊŋ˧˥ tʰʊŋ˧˥ fu˨˩","ゾン トン フー","総統府"],
+  ["二二八和平公園","aɻ˥˩ aɻ˥˩ pa˥ xɤ˧˥ pʰiŋ˧˥ kʊŋ˥ ɥɛn˧˥","アル アル バー ホァ ピン ゴン ユエン","二二八和平公園"],
+  ["九份老街","tɕjoʊ˨˩ fən˥˩ laʊ˨˩ tɕjɛ˥","ジウ フェン ラオ ジエ","九份老街","帰りのバス停の名前もこれ"],
+  ["阿妹茶樓","a˥ meɪ˥˩ ʈʂʰa˧˥ loʊ˧˥","アー メイ ツァー ロウ","阿妹茶樓"],
+  ["南門市場","nan˧˥ mən˧˥ ʂɻ̩˥˩ ʈʂʰɑŋ˨˩","ナン メン スー ツァン","南門市場"],
+  ["中正紀念堂","ʈʂʊŋ˥ ʈʂəŋ˥˩ tɕi˥˩ njɛn˥˩ tʰɑŋ˧˥","ゾン ゼン ジー ニエン タン","中正紀念堂"],
+  ["台北101","tʰaɪ˧˥ peɪ˨˩ i˥ liŋ˧˥ i˥","タイ ベイ イー リン イー","台北101","「101」は イー リン イー"],
+  ["國父紀念館","kwo˧˥ fu˥˩ tɕi˥˩ njɛn˥˩ kwan˨˩","グオ フー ジー ニエン グアン","国父紀念館"]],
+ greet:[
+  ["#","あいさつ"],
+  ["你好","ni˧˥ xaʊ˨˩","ニー ハオ","こんにちは","朝昼晩いつでも使える。夜の「こんばんは」もこれ"],
+  ["早安","tsaʊ˨˩ an˥","ザオ アン","おはようございます"],
+  ["午安","u˨˩ an˥","ウー アン","こんにちは（昼）","あまり使わない。你好で十分"],
+  ["晚安","wan˨˩ an˥","ワン アン","おやすみなさい","夜の別れ際に。出会いのあいさつには使わない"],
+  ["再見","tsaɪ˥˩ tɕjɛn˥˩","ザイ ジエン","さようなら"],
+  ["掰掰","paɪ˥ paɪ˥","バイ バイ","バイバイ","台湾ではお店を出るときにもよく使う"],
+  ["#","お礼"],
+  ["謝謝","ɕjɛ˥˩ ɕjɛ˥˩","シエ シエ","ありがとう","台湾では2音節目も軽くしすぎない"],
+  ["謝謝你","ɕjɛ˥˩ ɕjɛ˥˩ ni˨˩","シエ シエ ニー","ありがとう（あなたに）"],
+  ["非常感謝","feɪ˥ ʈʂʰɑŋ˧˥ kan˨˩ ɕjɛ˥˩","フェイ ツァン ガン シエ","本当にありがとうございます"],
+  ["不客氣","pu˧˥ kʰɤ˥˩ tɕʰi˥˩","ブー クァ チー","どういたしまして"],
+  ["#","謝る・呼びかける"],
+  ["不好意思","pu˥˩ xaʊ˨˩ i˥˩ sɹ̩˧","ブー ハオ イー ス","すみません","軽い謝罪にも、人を呼ぶときにも"],
+  ["請問","tɕʰiŋ˨˩ wən˥˩","チン ウェン","ちょっとお尋ねします","質問の前に付ける"],
+  ["對不起","tweɪ˥˩ pu˥˩ tɕʰi˨˩","ドゥイ ブー チー","ごめんなさい","はっきり謝るとき"],
+  ["沒關係","meɪ˧˥ kwan˥ ɕi˥˩","メイ グワン シー","大丈夫です・気にしないで"],
+  ["#","はい・いいえ"],
+  ["是","ʂɻ̩˥˩","スー","はい（そうです）"],
+  ["不是","pu˧˥ ʂɻ̩˥˩","ブー スー","いいえ（違います）"],
+  ["對","tweɪ˥˩","ドゥイ","そうです・その通り"],
+  ["好","xaʊ˨˩","ハオ","はい・OK"],
+  ["好的","xaʊ˨˩ tɤ˧","ハオ ダ","わかりました・かしこまりました"],
+  ["要","jaʊ˥˩","ヤオ","要ります（はい）","「要〜嗎？（〜要りますか）」と聞かれたら"],
+  ["不要","pu˧˥ jaʊ˥˩","ブー ヤオ","要りません（いいえ）"],
+  ["有","joʊ˨˩","ヨウ","あります・持っています"],
+  ["沒有","meɪ˧˥ joʊ˨˩","メイ ヨウ","ないです・持っていません"],
+  ["可以","kʰɤ˧˥ i˨˩","クァ イー","いいですよ・できます"],
+  ["不可以","pu˥˩ kʰɤ˧˥ i˨˩","ブー クァ イー","だめです・できません"],
+  ["不用了，謝謝。","pu˧˥ jʊŋ˥˩ lɤ˧ ɕjɛ˥˩ ɕjɛ˥˩","ブー ヨン ラ シエ シエ","結構です、ありがとう","勧誘や袋を断るときに"],
+  ["#","お願いする"],
+  ["麻煩你。","ma˧˥ fan˧˥ ni˨˩","マー ファン ニー","お願いします","頼みごとをするときの丁寧な言い方。台湾でよく使う"],
+  ["請","tɕʰiŋ˨˩","チン","どうぞ・〜してください"],
+  ["請給我這個。","tɕʰiŋ˨˩ keɪ˧˥ wo˨˩ ʈʂɤ˥˩ kɤ˧","チン ゲイ ウォ ゼ ガ","これをください"],
+  ["拜託！","paɪ˥˩ tʰwo˥","バイ トゥオ","お願い！","くだけた頼み方"],
+  ["可以嗎？","kʰɤ˧˥ i˨˩ ma˧","クァ イー マ","いいですか？"],
+  ["等一下。","təŋ˨˩ i˧˥ ɕja˥˩","ドン イー シャー","ちょっと待ってください"],
+  ["可以幫我拍照嗎？","kʰɤ˧˥ i˨˩ pɑŋ˥ wo˨˩ pʰaɪ˥ ʈʂaʊ˥˩ ma˧","クァ イー バン ウォ パイ ザオ マ","写真を撮ってもらえますか"],
+  ["#","褒める"],
+  ["好吃！","xaʊ˨˩ ʈʂʰɻ̩˥","ハオ ツー","おいしい！"],
+  ["很好吃！","xən˧˥ xaʊ˨˩ ʈʂʰɻ̩˥","ヘン ハオ ツー","とてもおいしい！","很＋好は3声連続なので很が˧˥"],
+  ["好漂亮！","xaʊ˨˩ pʰjaʊ˥˩ ljɑŋ˥˩","ハオ ピャオ リャン","きれい！"],
+  ["好可愛！","xaʊ˧˥ kʰɤ˨˩ aɪ˥˩","ハオ クァ アイ","かわいい！","好＋可は3声連続なので好が˧˥"],
+  ["好厲害！","xaʊ˨˩ li˥˩ xaɪ˥˩","ハオ リー ハイ","すごい！"],
+  ["很棒！","xən˨˩ pɑŋ˥˩","ヘン バン","すばらしい！"]],
+ num:[
+  ["#","数字"],
+  ["零","liŋ˧˥","リン","0"],
+  ["一 二 三 四 五","i˥ aɻ˥˩ san˥ sɹ̩˥˩ u˨˩","イー アル サン スー ウー","1 2 3 4 5"],
+  ["六 七 八 九 十","ljoʊ˥˩ tɕʰi˥ pa˥ tɕjoʊ˨˩ ʂɻ̩˧˥","リウ チー バー ジウ スー","6 7 8 9 10","四（↘）と十（↗）はかなでは同じ「スー」。矢印で区別"],
+  ["十一","ʂɻ̩˧˥ i˥","スー イー","11"],
+  ["二十","aɻ˥˩ ʂɻ̩˧˥","アル スー","20"],
+  ["九十九","tɕjoʊ˨˩ ʂɻ̩˧˥ tɕjoʊ˨˩","ジウ スー ジウ","99"],
+  ["一百","i˥˩ paɪ˨˩","イー バイ","100"],
+  ["一百零五","i˥˩ paɪ˨˩ liŋ˧˥ u˨˩","イー バイ リン ウー","105","間の0は「零」と言う"],
+  ["一百五","i˥˩ paɪ˨˩ u˨˩","イー バイ ウー","150","「一百五十」の略。105ではない"],
+  ["兩百","ljɑŋ˧˥ paɪ˨˩","リャン バイ","200","百・千・萬の前の2は「兩」"],
+  ["一千","i˥˩ tɕʰjɛn˥","イー チエン","1000"],
+  ["兩千","ljɑŋ˨˩ tɕʰjɛn˥","リャン チエン","2000"],
+  ["一萬","i˧˥ wan˥˩","イー ワン","1万"],
+  ["#","お金"],
+  ["塊","kʰwaɪ˥˩","クァイ","元（話し言葉）","値札は「元」や「NT$」。口では「塊」"],
+  ["五十塊","u˨˩ ʂɻ̩˧˥ kʰwaɪ˥˩","ウー スー クァイ","50元"],
+  ["一百塊","i˥˩ paɪ˨˩ kʰwaɪ˥˩","イー バイ クァイ","100元"],
+  ["一百二十塊","i˥˩ paɪ˨˩ aɻ˥˩ ʂɻ̩˧˥ kʰwaɪ˥˩","イー バイ アル スー クァイ","120元"],
+  ["五百塊","u˧˥ paɪ˨˩ kʰwaɪ˥˩","ウー バイ クァイ","500元"],
+  ["一千塊","i˥˩ tɕʰjɛn˥ kʰwaɪ˥˩","イー チエン クァイ","1000元"],
+  ["現金","ɕjɛn˥˩ tɕin˥","シエン ジン","現金"],
+  ["找錢","ʈʂaʊ˨˩ tɕʰjɛn˧˥","ザオ チエン","おつり"],
+  ["有零錢嗎？","joʊ˨˩ liŋ˧˥ tɕʰjɛn˧˥ ma˧","ヨウ リン チエン マ","小銭はありますか","大きいお札を出すと聞かれることが多い"],
+  ["不用找了。","pu˧˥ jʊŋ˥˩ ʈʂaʊ˨˩ lɤ˧","ブー ヨン ザオ ラ","おつりはいりません"],
+  ["#","ものの数え方"],
+  ["幾個？","tɕi˨˩ kɤ˥˩","ジー ガ","いくつ？"],
+  ["一個","i˧˥ kɤ˥˩","イー ガ","1つ","迷ったら「個」でたいてい通じる"],
+  ["兩個","ljɑŋ˨˩ kɤ˥˩","リャン ガ","2つ","「二個」とは言わない"],
+  ["三個","san˥ kɤ˥˩","サン ガ","3つ"],
+  ["一杯","i˥˩ peɪ˥","イー ベイ","（飲み物）1杯"],
+  ["一份","i˧˥ fən˥˩","イー フェン","1人前"],
+  ["一盒","i˥˩ xɤ˧˥","イー ホァ","1箱","お土産の箱"],
+  ["一包","i˥˩ paʊ˥","イー バオ","1袋・1パック"],
+  ["一張","i˥˩ ʈʂɑŋ˥","イー ザン","1枚","切符・チケット"],
+  ["兩位","ljɑŋ˨˩ weɪ˥˩","リャン ウェイ","2名です","お店で「幾位？（何名様？）」と聞かれたら"]],
+ transit:[
+  ["#","悠遊カード"],
+  ["悠遊卡","joʊ˥ joʊ˧˥ kʰa˨˩","ヨウ ヨウ カー","悠遊カード"],
+  ["我要加值。","wo˨˩ jaʊ˥˩ tɕja˥ ʈʂɻ̩˧˥","ウォ ヤオ ジャー ズー","チャージしたいです"],
+  ["加值五百塊。","tɕja˥ ʈʂɻ̩˧˥ u˧˥ paɪ˨˩ kʰwaɪ˥˩","ジャー ズー ウー バイ クァイ","500元チャージしてください"],
+  ["#","場所を聞く"],
+  ["捷運站在哪裡？","tɕjɛ˧˥ yn˥˩ ʈʂan˥˩ tsaɪ˥˩ na˧˥ li˨˩","ジエ ユン ザン ザイ ナー リー","MRTの駅はどこですか"],
+  ["公車站在哪裡？","kʊŋ˥ ʈʂʰɤ˥ ʈʂan˥˩ tsaɪ˥˩ na˧˥ li˨˩","ゴン ツァ ザン ザイ ナー リー","バス停はどこですか"],
+  ["幾號出口？","tɕi˨˩ xaʊ˥˩ ʈʂʰu˥ kʰoʊ˨˩","ジー ハオ ツー コウ","何番出口ですか"],
+  ["往機場的車在哪裡？","wɑŋ˨˩ tɕi˥ ʈʂʰɑŋ˨˩ tɤ˧ ʈʂʰɤ˥ tsaɪ˥˩ na˧˥ li˨˩","ワン ジー ツァン ダ ツァ ザイ ナー リー","空港行きはどこですか"],
+  ["#","乗る・降りる"],
+  ["我要去九份。","wo˨˩ jaʊ˥˩ tɕʰy˥˩ tɕjoʊ˨˩ fən˥˩","ウォ ヤオ チュー ジウ フェン","九份に行きたいです","九份を「地名」の言葉に入れ替えて使える"],
+  ["這班車到九份嗎？","ʈʂɤ˥˩ pan˥ ʈʂʰɤ˥ taʊ˥˩ tɕjoʊ˨˩ fən˥˩ ma˧","ゼ バン ツァ ダオ ジウ フェン マ","このバスは九份に行きますか"],
+  ["到九份要多久？","taʊ˥˩ tɕjoʊ˨˩ fən˥˩ jaʊ˥˩ two˥ tɕjoʊ˨˩","ダオ ジウ フェン ヤオ ドゥオ ジウ","九份までどのくらいかかりますか"],
+  ["在哪裡下車？","tsaɪ˥˩ na˧˥ li˨˩ ɕja˥˩ ʈʂʰɤ˥","ザイ ナー リー シャー ツァ","どこで降りればいいですか"],
+  ["到了請告訴我。","taʊ˥˩ lɤ˧ tɕʰiŋ˨˩ kaʊ˥˩ su˥˩ wo˨˩","ダオ ラ チン ガオ スー ウォ","着いたら教えてください"],
+  ["我要下車！","wo˨˩ jaʊ˥˩ ɕja˥˩ ʈʂʰɤ˥","ウォ ヤオ シャー ツァ","降ります！"],
+  ["請到這裡。","tɕʰiŋ˨˩ taʊ˥˩ ʈʂɤ˥˩ li˨˩","チン ダオ ゼ リー","ここまでお願いします","タクシー・Uberで住所を見せながら"],
+  ["#","駅の表示"],
+  ["出口","ʈʂʰu˥ kʰoʊ˨˩","ツー コウ","出口"],
+  ["入口","ɻu˥˩ kʰoʊ˨˩","ルー コウ","入口"],
+  ["月台","ɥɛ˥˩ tʰaɪ˧˥","ユエ タイ","ホーム"],
+  ["轉乘","ʈʂwan˨˩ ʈʂʰəŋ˧˥","ズアン ツォン","乗り換え"],
+  ["直達車","ʈʂɻ̩˧˥ ta˧˥ ʈʂʰɤ˥","ズー ダー ツァ","空港MRTの快速","紫の車両"]],
+ food:[
+  ["#","注文"],
+  ["我要這個。","wo˨˩ jaʊ˥˩ ʈʂɤ˥˩ kɤ˧","ウォ ヤオ ゼ ガ","これをください","指さしながら"],
+  ["一個","i˧˥ kɤ˥˩","イー ガ","1つ"],
+  ["兩個","ljɑŋ˨˩ kɤ˥˩","リャン ガ","2つ","「二個」とは言わない"],
+  ["內用","neɪ˥˩ jʊŋ˥˩","ネイ ヨン","店内で食べます"],
+  ["外帶","waɪ˥˩ taɪ˥˩","ワイ ダイ","持ち帰ります"],
+  ["有日文菜單嗎？","joʊ˨˩ ɻ̩˥˩ wən˧˥ tsʰaɪ˥˩ tan˥ ma˧","ヨウ リー ウェン ツァイ ダン マ","日本語のメニューはありますか"],
+  ["不要辣。","pu˧˥ jaʊ˥˩ la˥˩","ブー ヤオ ラー","辛くしないでください"],
+  ["小辣","ɕjaʊ˨˩ la˥˩","シャオ ラー","少しだけ辛く"],
+  ["不要香菜。","pu˧˥ jaʊ˥˩ ɕjɑŋ˥ tsʰaɪ˥˩","ブー ヤオ シャン ツァイ","パクチー抜きで"],
+  ["買單。","maɪ˨˩ tan˥","マイ ダン","お会計お願いします","夜市の屋台は注文時に先払いが多い"],
+  ["#","タピオカミルクティー"],
+  ["珍珠奶茶，大杯，半糖少冰。","ʈʂən˥ ʈʂu˥ naɪ˨˩ ʈʂʰa˧˥ ta˥˩ peɪ˥ pan˥˩ tʰɑŋ˧˥ ʂaʊ˨˩ piŋ˥","ゼン ズー ナイ ツァー ダー ベイ バン タン サオ ビン","タピオカミルクティー、L、甘さ半分、氷少なめで","注文は「品名 → サイズ → 甘さ → 氷」の順。下の言葉を入れ替えて使う"],
+  ["珍珠奶茶","ʈʂən˥ ʈʂu˥ naɪ˨˩ ʈʂʰa˧˥","ゼン ズー ナイ ツァー","タピオカミルクティー"],
+  ["珍奶","ʈʂən˥ naɪ˨˩","ゼン ナイ","タピオカミルクティー（略）"],
+  ["波霸奶茶","pʰwo˥ pa˥˩ naɪ˨˩ ʈʂʰa˧˥","ポー バー ナイ ツァー","大粒タピオカのミルクティー"],
+  ["珍珠鮮奶","ʈʂən˥ ʈʂu˥ ɕjɛn˥ naɪ˨˩","ゼン ズー シエン ナイ","タピオカ入り牛乳","お茶なし。鮮奶茶なら紅茶＋牛乳"],
+  ["黑糖珍珠鮮奶","xeɪ˥ tʰɑŋ˧˥ ʈʂən˥ ʈʂu˥ ɕjɛn˥ naɪ˨˩","ヘイ タン ゼン ズー シエン ナイ","黒糖タピオカミルク"],
+  ["#","サイズ・温度"],
+  ["大杯","ta˥˩ peɪ˥","ダー ベイ","Lサイズ"],
+  ["中杯","ʈʂʊŋ˥ peɪ˥","ゾン ベイ","Mサイズ"],
+  ["熱的","ɻɤ˥˩ tɤ˧","ルァ ダ","ホット","ホットができない店もある"],
+  ["#","甘さ"],
+  ["全糖","tɕʰɥɛn˧˥ tʰɑŋ˧˥","チュエン タン","甘さ普通","台湾の「普通」はかなり甘い"],
+  ["半糖","pan˥˩ tʰɑŋ˧˥","バン タン","甘さ半分"],
+  ["微糖","weɪ˧˥ tʰɑŋ˧˥","ウェイ タン","甘さ控えめ"],
+  ["無糖","u˧˥ tʰɑŋ˧˥","ウー タン","甘さなし"],
+  ["#","氷"],
+  ["正常冰","ʈʂəŋ˥˩ ʈʂʰɑŋ˧˥ piŋ˥","ゼン ツァン ビン","氷普通"],
+  ["少冰","ʂaʊ˨˩ piŋ˥","サオ ビン","氷少なめ"],
+  ["去冰","tɕʰy˥˩ piŋ˥","チュー ビン","氷なし"],
+  ["#","夜市・名物"],
+  ["小籠包","ɕjaʊ˨˩ lʊŋ˧˥ paʊ˥","シャオ ロン バオ","小籠包"],
+  ["滷肉飯","lu˨˩ ɻoʊ˥˩ fan˥˩","ルー ロウ ファン","ルーローハン","豚バラ煮込みのせご飯"],
+  ["牛肉麵","njoʊ˧˥ ɻoʊ˥˩ mjɛn˥˩","ニウ ロウ ミエン","牛肉麺"],
+  ["蚵仔煎","o˧ a˥ tsjɛn˥","オ ア ジェン","牡蠣オムレツ","屋台では台湾語読みが普通なので台湾語で書いている"],
+  ["大腸包小腸","ta˥˩ ʈʂʰɑŋ˧˥ paʊ˥ ɕjaʊ˨˩ ʈʂʰɑŋ˧˥","ダー ツァン バオ シャオ ツァン","もち米ソーセージのホットドッグ"],
+  ["胡椒餅","xu˧˥ tɕjaʊ˥ piŋ˨˩","フー ジャオ ビン","胡椒餅","窯で焼いた胡椒の効いた肉まん"],
+  ["臭豆腐","ʈʂʰoʊ˥˩ toʊ˥˩ fu˨˩","ツォウ ドウ フー","臭豆腐"],
+  ["鹽酥雞","jɛn˧˥ su˥ tɕi˥","イエン スー ジー","台湾風からあげ"],
+  ["雞排","tɕi˥ pʰaɪ˧˥","ジー パイ","大きなフライドチキン"],
+  ["水煎包","ʂweɪ˨˩ tɕjɛn˥ paʊ˥","スイ ジエン バオ","焼き肉まん"],
+  ["蔥抓餅","tsʰʊŋ˥ ʈʂwa˥ piŋ˨˩","ツォン ズア ビン","ネギ入りパイ"],
+  ["刈包","kwa˥˩ paʊ˥","グア バオ","台湾風バーガー","豚の角煮を挟んだ饅頭"],
+  ["芒果冰","mɑŋ˧˥ kwo˨˩ piŋ˥","マン グオ ビン","マンゴーかき氷"],
+  ["豆花","toʊ˥˩ xwa˥","ドウ ホア","豆花","豆乳プリン風のデザート"],
+  ["#","朝ごはん"],
+  ["豆漿","toʊ˥˩ tɕjɑŋ˥","ドウ ジャン","豆乳"],
+  ["蛋餅","tan˥˩ piŋ˨˩","ダン ビン","台湾風クレープ（卵入り）"]],
+ shop:[
+  ["#","支払い"],
+  ["可以刷卡嗎？","kʰɤ˧˥ i˨˩ ʂwa˥ kʰa˨˩ ma˧","クァ イー スア カー マ","カードで払えますか","「刷卡」＝カードで払う。一番よく使う言い方"],
+  ["可以用信用卡嗎？","kʰɤ˧˥ i˨˩ jʊŋ˥˩ ɕin˥˩ jʊŋ˥˩ kʰa˨˩ ma˧","クァ イー ヨン シン ヨン カー マ","クレジットカードは使えますか"],
+  ["可以感應嗎？","kʰɤ˧˥ i˨˩ kan˨˩ iŋ˥˩ ma˧","クァ イー ガン イン マ","タッチ決済できますか","カードやスマホをかざす支払い"],
+  ["可以用悠遊卡嗎？","kʰɤ˧˥ i˨˩ jʊŋ˥˩ joʊ˥ joʊ˧˥ kʰa˨˩ ma˧","クァ イー ヨン ヨウ ヨウ カー マ","悠遊カードは使えますか","コンビニ・全聯・屋台の一部で使える"],
+  ["只收現金嗎？","ʈʂɻ̩˨˩ ʂoʊ˥ ɕjɛn˥˩ tɕin˥ ma˧","ズー ソウ シエン ジン マ","現金だけですか","貼り紙の「只收現金」は「現金のみ」"],
+  ["我要刷卡。","wo˨˩ jaʊ˥˩ ʂwa˥ kʰa˨˩","ウォ ヤオ スア カー","カードで払います"],
+  ["我付現金。","wo˨˩ fu˥˩ ɕjɛn˥˩ tɕin˥","ウォ フー シエン ジン","現金で払います"],
+  ["請簽名。","tɕʰiŋ˨˩ tɕʰjɛn˥ miŋ˧˥","チン チエン ミン","サインをお願いします","店員に言われる言葉"],
+  ["#","お店・施設"],
+  ["台北101購物中心","tʰaɪ˧˥ peɪ˨˩ i˥ liŋ˧˥ i˥ koʊ˥˩ u˥˩ ʈʂʊŋ˥ ɕin˥","タイ ベイ イー リン イー ゴウ ウー ゾン シン","台北101ショッピングセンター"],
+  ["美食街","meɪ˨˩ ʂɻ̩˧˥ tɕjɛ˥","メイ スー ジエ","フードコート","101の地下など"],
+  ["萬家福","wan˥˩ tɕja˥ fu˧˥","ワン ジャー フー","万家福（旧カルフール）","2026年7月に家樂福から改名"],
+  ["萬家福桂林店","wan˥˩ tɕja˥ fu˧˥ kweɪ˥˩ lin˧˥ tjɛn˥˩","ワン ジャー フー グイ リン ディエン","万家福 桂林店"],
+  ["全聯","tɕʰɥɛn˧˥ ljɛn˧˥","チュエン リエン","全聯（スーパー）"],
+  ["全聯萬華長沙店","tɕʰɥɛn˧˥ ljɛn˧˥ wan˥˩ xwa˧˥ ʈʂʰɑŋ˧˥ ʂa˥ tjɛn˥˩","チュエン リエン ワン ホワ ツァン サー ディエン","全聯 萬華長沙店"],
+  ["全聯萬華柳州店","tɕʰɥɛn˧˥ ljɛn˧˥ wan˥˩ xwa˧˥ ljoʊ˨˩ ʈʂoʊ˥ tjɛn˥˩","チュエン リエン ワン ホワ リウ ゾウ ディエン","全聯 萬華柳州店"],
+  ["佳德糕餅","tɕja˥ tɤ˧˥ kaʊ˥ piŋ˨˩","ジャー ダ ガオ ビン","佳德糕餅（パイナップルケーキ）"],
+  ["阿妹茶樓","a˥ meɪ˥˩ ʈʂʰa˧˥ loʊ˧˥","アー メイ ツァー ロウ","阿妹茶樓（九份）"],
+  ["南門市場","nan˧˥ mən˧˥ ʂɻ̩˥˩ ʈʂʰɑŋ˨˩","ナン メン スー ツァン","南門市場"],
+  ["#","お店の種類"],
+  ["超市","ʈʂʰaʊ˥ ʂɻ̩˥˩","ツァオ スー","スーパー"],
+  ["便利商店","pjɛn˥˩ li˥˩ ʂɑŋ˥ tjɛn˥˩","ビエン リー サン ディエン","コンビニ"],
+  ["小七","ɕjaʊ˨˩ tɕʰi˥","シャオ チー","セブン-イレブン（通称）"],
+  ["全家","tɕʰɥɛn˧˥ tɕja˥","チュエン ジャー","ファミリーマート"],
+  ["茶行","ʈʂʰa˧˥ xɑŋ˧˥","ツァー ハン","茶葉店"],
+  ["百貨公司","paɪ˨˩ xwo˥˩ kʊŋ˥ sɹ̩˥","バイ フオ ゴン スー","デパート"],
+  ["免稅店","mjɛn˨˩ ʂweɪ˥˩ tjɛn˥˩","ミエン スイ ディエン","免税店"],
+  ["#","値段"],
+  ["多少錢？","two˥ ʂaʊ˨˩ tɕʰjɛn˧˥","ドゥオ サオ チエン","いくらですか"],
+  ["這個多少錢？","ʈʂɤ˥˩ kɤ˧ two˥ ʂaʊ˨˩ tɕʰjɛn˧˥","ゼ ガ ドゥオ サオ チエン","これはいくらですか"],
+  ["太貴了。","tʰaɪ˥˩ kweɪ˥˩ lɤ˧","タイ グイ ラ","高すぎます"],
+  ["可以便宜一點嗎？","kʰɤ˧˥ i˨˩ pʰjɛn˧˥ i˧ i˥˩ tjɛn˨˩ ma˧","クァ イー ピエン イー イー ディエン マ","少し安くなりませんか","市場や夜市で。値札のある店ではしない"],
+  ["可以退稅嗎？","kʰɤ˧˥ i˨˩ tʰweɪ˥˩ ʂweɪ˥˩ ma˧","クァ イー トゥイ スイ マ","免税できますか"],
+  ["#","お店で"],
+  ["我只是看看。","wo˧˥ ʈʂɻ̩˨˩ ʂɻ̩˥˩ kʰan˥˩ kʰan˧","ウォ ズー スー カン カン","見ているだけです"],
+  ["可以試吃嗎？","kʰɤ˧˥ i˨˩ ʂɻ̩˥˩ ʈʂʰɻ̩˥ ma˧","クァ イー スー ツー マ","試食できますか"],
+  ["不用袋子。","pu˧˥ jʊŋ˥˩ taɪ˥˩ tsɹ̩˧","ブー ヨン ダイ ズ","袋はいりません"],
+  ["我要袋子。","wo˨˩ jaʊ˥˩ taɪ˥˩ tsɹ̩˧","ウォ ヤオ ダイ ズ","袋をください","レジ袋は有料（数元）"],
+  ["#","お土産"],
+  ["鳳梨酥","fəŋ˥˩ li˧˥ su˥","フォン リー スー","パイナップルケーキ"],
+  ["牛軋糖","njoʊ˧˥ ka˧˥ tʰɑŋ˧˥","ニウ ガー タン","ヌガー","「ニウ ザー タン」と言う人もいる"],
+  ["牛軋餅","njoʊ˧˥ ka˧˥ piŋ˨˩","ニウ ガー ビン","ヌガークラッカー"],
+  ["烏龍茶","u˥ lʊŋ˧˥ ʈʂʰa˧˥","ウー ロン ツァー","ウーロン茶"],
+  ["東方美人茶","tʊŋ˥ fɑŋ˥ meɪ˨˩ ɻən˧˥ ʈʂʰa˧˥","ドン ファン メイ レン ツァー","東方美人茶"],
+  ["高山茶","kaʊ˥ ʂan˥ ʈʂʰa˧˥","ガオ サン ツァー","高山茶"],
+  ["茶包","ʈʂʰa˧˥ paʊ˥","ツァー バオ","ティーバッグ"],
+  ["芒果乾","mɑŋ˧˥ kwo˨˩ kan˥","マン グオ ガン","ドライマンゴー"],
+  ["沙茶醬","ʂa˥ ʈʂʰa˧˥ tɕjɑŋ˥˩","サー ツァー ジャン","沙茶醤（バーベキューソース）"]]
+};
 /* ---------- ヘルパー ---------- */
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const gmap=p=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.name)+(p.id?"&query_place_id="+p.id:"");
@@ -610,6 +927,55 @@ document.querySelectorAll("[data-checks]").forEach(el=>{
  }).join("");
  el.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",()=>{if(store){try{store.setItem(inp.dataset.key,inp.checked?"1":"0");}catch(e){}}}));
 });
+
+/* ---------- 会話 ---------- */
+const tts=("speechSynthesis" in window&&"SpeechSynthesisUtterance" in window)?window.speechSynthesis:null;
+let zhVoice=null;
+function pickVoice(){
+ if(!tts)return;
+ const vs=tts.getVoices();
+ zhVoice=vs.find(v=>/^zh[-_]TW/i.test(v.lang))||vs.find(v=>/^zh[-_](Hant|HK)/i.test(v.lang))||vs.find(v=>/^zh/i.test(v.lang))||null;
+}
+if(tts){pickVoice();tts.addEventListener?.("voiceschanged",pickVoice);}
+function speak(text,btn){
+ if(!tts)return;
+ tts.cancel();
+ document.querySelectorAll(".play[data-speaking]").forEach(b=>b.removeAttribute("data-speaking"));
+ const u=new SpeechSynthesisUtterance(text);
+ u.lang=zhVoice?zhVoice.lang:"zh-TW";if(zhVoice)u.voice=zhVoice;u.rate=.8;
+ btn.setAttribute("data-speaking","");
+ u.onend=u.onerror=()=>btn.removeAttribute("data-speaking");
+ tts.speak(u);
+}
+/* 声調字母を音節上の矢印に、そり舌音を台湾式の ts/s に置き換えて表示 */
+const TONE={"˥":"→","˧˥":"↗","˨˩":"↓","˨˩˦":"↓","˥˩":"↘","˧":"·"};
+const simplifyIpa=seg=>seg.replace(/ʈʂʰɻ̩/g,"tsʰɨ").replace(/ʈʂɻ̩/g,"tsɨ").replace(/ʂɻ̩/g,"sɨ").replace(/^ɻ̩/,"ɻɨ").replace(/ɹ̩/g,"ɨ").replace(/ʈʂ/g,"ts").replace(/ʂ/g,"s");
+const splitSyl=syl=>{const m=syl.match(/^(.*?)([˥˦˧˨˩]*)$/);return {seg:simplifyIpa(m[1]),tone:TONE[m[2]]||""};};
+const ipaText=ipa=>ipa.split(" ").map(x=>splitSyl(x).seg).join(" ");
+const kanaHtml=(kana,ipa)=>{const tones=ipa.split(" ").map(x=>splitSyl(x).tone);return kana.split(" ").map((k,i)=>`<ruby>${esc(k)}<rt>${esc(tones[i]||"")}</rt></ruby>`).join(" ");};
+const chips=[...document.querySelectorAll("#phrase .chip")];
+const phraseList=document.getElementById("phrase-list");
+function renderPhrases(cat){
+ const groups=[];
+ (PHRASES[cat]||[]).forEach(r=>{if(r[0]==="#"||!groups.length)groups.push({title:r[0]==="#"?r[1]:"",rows:[]});if(r[0]!=="#")groups[groups.length-1].rows.push(r);});
+ phraseList.innerHTML=groups.map(g=>`${g.title?`<div class="group-header">${esc(g.title)}</div>`:""}<div class="group">${g.rows.map(([zh,ipa,kana,ja,note])=>`<div class="row phrase"><div class="row__main"><div class="phrase__zh" lang="zh-Hant-TW">${esc(zh)}</div><div class="phrase__kana">${kanaHtml(kana,ipa)}</div><div class="phrase__ipa">${esc(ipaText(ipa))}</div><div class="row__sub">${esc(ja)}</div>${note?`<div class="caption">${esc(note)}</div>`:""}</div>${tts?`<button type="button" class="play" data-say="${esc(zh)}" aria-label="${esc(zh)}を再生">▶</button>`:""}</div>`).join("")}</div>`).join("");
+ chips.forEach(c=>c.setAttribute("aria-selected",c.dataset.cat===cat?"true":"false"));
+}
+phraseList.addEventListener("click",e=>{const b=e.target.closest(".play");if(b)speak(b.dataset.say,b);});
+function setNavbarHeight(){document.documentElement.style.setProperty("--navbar-h",document.querySelector(".navbar").offsetHeight+"px");}
+setNavbarHeight();window.addEventListener("resize",setNavbarHeight);
+let phraseCat="greet";
+if(store){try{const s=store.getItem("taipei-shiori:phrase-cat");if(s&&PHRASES[s])phraseCat=s;}catch(e){}}
+renderPhrases(phraseCat);
+chips.forEach(c=>c.addEventListener("click",()=>{
+ const cat=c.dataset.cat;renderPhrases(cat);
+ if(store){try{store.setItem("taipei-shiori:phrase-cat",cat);}catch(e){}}
+ const bar=document.querySelector("#phrase .chips"),limit=bar.getBoundingClientRect().bottom;
+ const top=phraseList.getBoundingClientRect().top;
+ if(top<limit)window.scrollTo(0,window.scrollY+top-limit);
+ try{c.scrollIntoView({block:"nearest",inline:"nearest"});}catch(e){}
+}));
+if(!tts)document.getElementById("phrase-tts-note").textContent="この端末では音声読み上げが使えません。";
 
 /* ---------- 地図 ---------- */
 const maps={};
