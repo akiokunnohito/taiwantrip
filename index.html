@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>台北旅のしおり｜2026/11/12–11/14</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+/* ===== HIG Foundations tokens (Bruna palette) ===== */
+:root{
+  color-scheme:light dark;
+  --bruna-red:#eb6100;--bruna-yellow:#fccc00;--bruna-blue:#004c97;--bruna-green:#15722c;--bruna-brown:#914e25;--bruna-gray:#737061;--bruna-white:#ffffff;
+  --tint:var(--bruna-blue);--destructive:var(--bruna-red);--success:var(--bruna-green);--warning:var(--bruna-yellow);
+  --gray-2:#b3b0a8;--gray-3:#cbc8c0;--gray-4:#d8d5ce;--gray-5:#e6e3dc;--gray-6:#f6f4ef;
+  --system-background:#ffffff;--secondary-system-background:#f6f4ef;
+  --system-grouped-background:#f6f4ef;--secondary-system-grouped-background:#ffffff;--tertiary-system-grouped-background:#f6f4ef;
+  --label:#000000;--secondary-label:#67645d;--tertiary-label:#a8a59e;
+  --on-accent:#ffffff;--on-destructive:#000000;--on-yellow:#000000;
+  --separator:rgba(70,66,58,.26);--opaque-separator:#cbc8c0;
+  --tertiary-system-fill:rgba(128,122,110,.13);--quaternary-system-fill:rgba(128,122,110,.08);
+  --accent-tint-fill:rgba(0,76,151,.12);
+  --bar-background:rgba(250,249,246,.94);
+  --shadow-float:0 10px 30px rgba(0,0,0,.12);
+  --font-sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Helvetica Neue","Hiragino Sans","Hiragino Kaku Gothic ProN",system-ui,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Monaco,monospace;
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;--space-8:32px;
+  --radius-xs:4px;--radius-sm:7px;--radius-segment:9px;--radius-md:10px;--radius-lg:20px;--radius-capsule:9999px;
+  --hit:44px;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bruna-red:#ff7a26;--bruna-yellow:#ffd633;--bruna-blue:#5a9ae0;--bruna-green:#45ad5c;--bruna-brown:#c27a4a;--bruna-gray:#a29d8c;
+  --gray-2:#6a6761;--gray-3:#4d4b46;--gray-4:#3d3b37;--gray-5:#2e2d2a;--gray-6:#1c1b19;
+  --system-background:#000000;--secondary-system-background:#1c1b19;
+  --system-grouped-background:#000000;--secondary-system-grouped-background:#1c1b19;--tertiary-system-grouped-background:#2e2d2a;
+  --label:#ffffff;--secondary-label:#a8a59e;--tertiary-label:#6a6761;
+  --on-accent:#000000;--on-destructive:#000000;
+  --separator:rgba(110,105,95,.5);--opaque-separator:#3d3b37;
+  --tertiary-system-fill:rgba(128,122,110,.26);--quaternary-system-fill:rgba(128,122,110,.18);
+  --accent-tint-fill:rgba(90,154,224,.2);
+  --bar-background:rgba(28,27,25,.94);
+  --shadow-float:0 10px 30px rgba(0,0,0,.5);
+}}
+@media (prefers-contrast:more){:root{
+  --bruna-red:#a84300;--bruna-blue:#003a75;--bruna-green:#0f5a22;--bruna-brown:#723c1b;--bruna-gray:#57554a;
+  --secondary-label:#4f4c46;--separator:rgba(70,66,58,.5);--accent-tint-fill:rgba(0,58,117,.12);--on-destructive:#ffffff;
+}}
+@media (prefers-contrast:more) and (prefers-color-scheme:dark){:root{
+  --bruna-red:#ff9a55;--bruna-blue:#8ab8ec;--bruna-green:#6fcf84;--bruna-brown:#d9a07a;--bruna-gray:#bfbbab;
+  --secondary-label:#c4c1ba;--separator:rgba(110,105,95,.85);--accent-tint-fill:rgba(138,184,236,.2);--on-destructive:#000000;
+}}
+
+/* ===== Base ===== */
+*{box-sizing:border-box}
+body{margin:0;background:var(--system-grouped-background);color:var(--label);font-family:var(--font-sans);font-size:17px;line-height:22px;-webkit-text-size-adjust:100%}
+a{color:var(--tint)}
+:focus-visible{outline:3px solid var(--tint);outline-offset:2px}
+.app{max-width:760px;margin:0 auto;min-height:100vh;padding-bottom:calc(var(--space-8) + env(safe-area-inset-bottom))}
+
+/* Navigation bar (translucent, blurred) */
+.navbar{position:sticky;top:0;z-index:1000;background:var(--bar-background);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid var(--separator);padding:calc(var(--space-2) + env(safe-area-inset-top)) calc(var(--space-4) + env(safe-area-inset-right)) var(--space-2) calc(var(--space-4) + env(safe-area-inset-left))}
+.navbar__title{font-size:17px;line-height:22px;font-weight:600;text-align:center;min-height:var(--hit);display:flex;flex-direction:column;justify-content:center}
+.navbar__sub{font-size:12px;line-height:16px;font-weight:400;color:var(--secondary-label)}
+.tabs{display:flex;gap:var(--space-2);overflow-x:auto;scrollbar-width:none;padding:var(--space-1) 0 var(--space-1)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none;display:inline-flex;align-items:center;justify-content:center;min-height:var(--hit);padding:0 var(--space-4);border-radius:var(--radius-capsule);background:var(--tertiary-system-fill);color:var(--label);font-size:15px;line-height:20px;font-weight:600;text-decoration:none}
+.tab[aria-selected="true"]{background:var(--tint);color:var(--on-accent)}
+.tab:active{opacity:.7}
+
+main{padding:var(--space-4) calc(var(--space-4) + env(safe-area-inset-right)) 0 calc(var(--space-4) + env(safe-area-inset-left))}
+@media(min-width:600px){main{padding-left:var(--space-5);padding-right:var(--space-5)}}
+.panel{display:none}.panel.active{display:block}
+
+/* Type */
+.large-title{font-size:34px;line-height:41px;font-weight:700;margin:var(--space-2) 0 var(--space-2)}
+.title-2{font-size:22px;line-height:28px;font-weight:700;margin:var(--space-8) 0 var(--space-3)}
+.headline{font-size:17px;line-height:22px;font-weight:600}
+.subheadline{font-size:15px;line-height:20px}
+.footnote{font-size:13px;line-height:18px;color:var(--secondary-label)}
+.caption{font-size:12px;line-height:16px;color:var(--secondary-label)}
+p{margin:0 0 var(--space-2)}
+
+/* Hero: flat Bruna field */
+.hero{border-radius:var(--radius-lg);padding:var(--space-5);margin-bottom:var(--space-4)}
+.hero--blue{background:var(--bruna-blue);color:var(--on-accent)}
+.hero--red{background:var(--bruna-red);color:var(--on-destructive)}
+.hero--green{background:var(--bruna-green);color:var(--on-accent)}
+.hero--yellow{background:var(--bruna-yellow);color:var(--on-yellow)}
+.hero__eyebrow{font-size:13px;line-height:18px;font-weight:600;letter-spacing:.02em}
+.hero__title{font-size:28px;line-height:34px;font-weight:700;margin:var(--space-1) 0 var(--space-2)}
+.hero p{margin:0;font-size:15px;line-height:20px}
+
+/* Inset grouped section */
+.group{background:var(--secondary-system-grouped-background);border-radius:var(--radius-md);overflow:hidden;margin:0 0 var(--space-2)}
+.group-header{font-size:13px;line-height:18px;color:var(--secondary-label);margin:var(--space-6) var(--space-4) var(--space-2)}
+.group-footer{font-size:13px;line-height:18px;color:var(--secondary-label);margin:var(--space-2) var(--space-4) 0}
+.row{display:flex;gap:var(--space-3);align-items:flex-start;min-height:var(--hit);padding:var(--space-3) var(--space-4);position:relative}
+.row + .row::before{content:"";position:absolute;top:0;right:0;left:var(--space-4);border-top:.5px solid var(--separator)}
+.row--indent + .row--indent::before{left:calc(var(--space-4) + 64px + var(--space-3))}
+.row__main{flex:1;min-width:0}
+.row__title{font-size:17px;line-height:22px}
+.row__sub{font-size:15px;line-height:20px;color:var(--secondary-label);margin-top:2px}
+
+/* Timeline rows */
+.time{flex:none;width:64px;font-size:15px;line-height:22px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--tint)}
+.badge{display:inline-block;font-size:11px;line-height:13px;font-weight:600;padding:3px 6px;border-radius:var(--radius-xs);vertical-align:2px;margin-right:var(--space-1)}
+.badge--warn{background:var(--warning);color:var(--on-yellow)}
+.badge--brown{background:var(--bruna-brown);color:#fff}
+
+/* Spot rows */
+.num{flex:none;width:29px;height:29px;border-radius:var(--radius-sm);display:grid;place-items:center;font-size:15px;font-weight:700;background:var(--bruna-blue);color:var(--on-accent)}
+.num--hotel{background:var(--bruna-red);color:var(--on-destructive)}
+.num--transit{background:var(--bruna-gray);color:#fff}
+.num--opt{background:var(--bruna-brown);color:#fff}
+.tag{display:inline-block;margin-top:var(--space-1);font-size:12px;line-height:16px;font-weight:600;padding:2px var(--space-2);border-radius:var(--radius-capsule);background:var(--tertiary-system-fill);color:var(--secondary-label)}
+.desc{font-size:15px;line-height:20px;color:var(--secondary-label);margin:var(--space-2) 0 0}
+
+/* Buttons */
+.buttons{display:flex;gap:var(--space-2);flex-wrap:wrap;margin-top:var(--space-3)}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:var(--hit);padding:0 var(--space-4);border-radius:var(--radius-capsule);font-size:15px;line-height:20px;font-weight:600;text-decoration:none;border:0}
+.btn:active{opacity:.7}
+.btn--filled{background:var(--tint);color:var(--on-accent)}
+.btn--tinted{background:var(--accent-tint-fill);color:var(--tint)}
+.btn--gray{background:var(--tertiary-system-fill);color:var(--tint)}
+.btn--small{min-height:32px;padding:0 var(--space-3);font-size:13px;position:relative}
+.btn--small::after{content:"";position:absolute;inset:-6px 0}
+
+/* Banners */
+.banner{display:flex;gap:var(--space-3);align-items:flex-start;border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);margin:0 0 var(--space-3);font-size:15px;line-height:20px}
+.banner--warn{background:var(--warning);color:var(--on-yellow)}
+.banner--info{background:var(--secondary-system-grouped-background);color:var(--label)}
+.banner b{font-weight:600}
+
+/* Flight */
+.flight{display:flex;justify-content:space-between;gap:var(--space-3);align-items:baseline;flex-wrap:wrap}
+.flight__route{font-size:20px;line-height:25px;font-weight:600;font-variant-numeric:tabular-nums}
+
+/* Checklist */
+.check{display:flex;gap:var(--space-3);align-items:center;min-height:var(--hit);padding:var(--space-3) var(--space-4);position:relative;cursor:pointer}
+.check + .check::before{content:"";position:absolute;top:0;right:0;left:calc(var(--space-4) + 22px + var(--space-3));border-top:.5px solid var(--separator)}
+.check input{appearance:none;-webkit-appearance:none;flex:none;width:22px;height:22px;margin:0;border-radius:50%;border:1.5px solid var(--gray-2);display:grid;place-items:center;cursor:pointer}
+.check input:checked{background:var(--success);border-color:var(--success)}
+.check input:checked::after{content:"";width:6px;height:11px;border:solid var(--on-accent);border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+.check span{font-size:17px;line-height:22px}
+.check input:checked + span{color:var(--secondary-label);text-decoration:line-through}
+.check:active{background:var(--gray-5)}
+
+/* Steps */
+.step{display:flex;gap:var(--space-3);align-items:flex-start;padding:var(--space-3) var(--space-4);position:relative}
+.step + .step::before{content:"";position:absolute;top:0;right:0;left:calc(var(--space-4) + 29px + var(--space-3));border-top:.5px solid var(--separator)}
+
+/* Maps */
+.map{height:340px;border-radius:var(--radius-md);overflow:hidden;background:var(--secondary-system-grouped-background);margin:0 0 var(--space-2)}
+.map-fallback{padding:var(--space-4);font-size:15px;line-height:20px;color:var(--secondary-label)}
+.legend{display:flex;gap:var(--space-4);flex-wrap:wrap;margin:0 var(--space-4) var(--space-1)}
+.legend span{display:inline-flex;align-items:center;gap:var(--space-1);font-size:12px;line-height:16px;color:var(--secondary-label)}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px}
+.pin{width:29px;height:29px;border-radius:var(--radius-sm);display:grid;place-items:center;font:700 13px/1 var(--font-sans);border:2px solid #000;box-sizing:border-box}
+.pin--spot{background:var(--bruna-blue);color:var(--on-accent)}
+.pin--hotel{background:var(--bruna-red);color:var(--on-destructive)}
+.pin--transit{background:var(--bruna-gray);color:#fff}
+.pin--opt{background:var(--bruna-brown);color:#fff}
+.leaflet-container{font-family:var(--font-sans);font-size:13px}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--secondary-system-grouped-background);color:var(--label);box-shadow:var(--shadow-float)}
+.leaflet-popup-content{margin:var(--space-3) var(--space-4);line-height:20px;font-size:15px}
+.leaflet-popup-content a{color:var(--tint);font-weight:600}
+.leaflet-control-attribution{font-size:11px}
+
+/* Weather */
+.weather{display:grid;grid-template-columns:1fr;gap:var(--space-3)}
+.weather-message{background:var(--secondary-system-grouped-background);border-radius:var(--radius-md);padding:var(--space-4);font-size:15px;line-height:20px;color:var(--secondary-label)}
+.weather-day{background:var(--secondary-system-grouped-background);border-radius:var(--radius-md);padding:var(--space-3);min-width:0}
+.weather-day__title{font-size:15px;line-height:20px;font-weight:650;margin:0 0 var(--space-2)}
+.weather-hours{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:4px}
+.weather-hour{min-width:0;text-align:center;padding:var(--space-2) 2px;border-radius:var(--radius-sm);background:var(--tertiary-system-grouped-background)}
+.weather-hour__time{font-size:12px;line-height:16px;color:var(--secondary-label);font-variant-numeric:tabular-nums}
+.weather-hour__icon{font-size:19px;line-height:25px;margin:3px 0}
+.weather-hour__temp{font-size:16px;line-height:20px;font-weight:650;font-variant-numeric:tabular-nums}
+.weather-hour__desc{font-size:10px;line-height:14px;color:var(--secondary-label);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:560px){.weather-hours{grid-template-columns:repeat(4,minmax(0,1fr))}.weather-hour{padding:var(--space-2)}}
+
+/* Footer */
+.footer{margin:var(--space-8) var(--space-4) 0;font-size:12px;line-height:16px;color:var(--secondary-label)}
+.footer a{color:var(--tint)}
+
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="navbar">
+  <div class="navbar__title">台北旅のしおり<span class="navbar__sub">2026/11/12（木）〜11/14（土）・2泊3日</span></div>
+  <nav class="tabs" role="tablist" aria-label="ページ">
+    <a class="tab" role="tab" href="#overview">概要</a>
+    <a class="tab" role="tab" href="#prep">準備</a>
+    <a class="tab" role="tab" href="#day1">Day1</a>
+    <a class="tab" role="tab" href="#day2">Day2</a>
+    <a class="tab" role="tab" href="#day3">Day3</a>
+    <a class="tab" role="tab" href="#transit">移動</a>
+    <a class="tab" role="tab" href="#souvenir">お土産</a>
+    <a class="tab" role="tab" href="#weather">天気</a>
+  </nav>
+</header>
+
+<main>
+<!-- ========== 概要 ========== -->
+<section class="panel" id="overview" aria-label="概要">
+  <div class="hero hero--blue">
+    <div class="hero__eyebrow">11/12 木 → 11/14 土・2名</div>
+    <div class="hero__title">台北、2泊3日</div>
+    <p>夜市 → 総統府と九份 → 南門市場・101と買い物</p>
+  </div>
+
+  <div class="group-header">フライト</div>
+  <div class="group">
+    <div class="row"><div class="row__main">
+      <div class="flight"><span class="headline">行き GK55・11/12</span><span class="caption">ジェットスター</span></div>
+      <div class="flight__route">関空T1 14:55 → 桃園T1 17:15</div>
+      <div class="row__sub"><span class="badge badge--warn">締切</span>チェックイン 14:10／搭乗口 14:15</div>
+    </div></div>
+    <div class="row"><div class="row__main">
+      <div class="flight"><span class="headline">帰り GK54・11/14</span><span class="caption">ジェットスター</span></div>
+      <div class="flight__route">桃園T1 18:15 → 関空T1 21:45</div>
+      <div class="row__sub"><span class="badge badge--warn">締切</span>チェックイン 17:30／搭乗口 17:35</div>
+    </div></div>
+  </div>
+  <p class="group-footer">台湾は日本より1時間遅れ。表示の時刻はすべて現地時間です。</p>
+
+  <div class="group-header">ホテル</div>
+  <div class="group">
+    <div class="row"><div class="num num--hotel">H</div><div class="row__main">
+      <div class="headline">COMMA BOUTIQUE HOTEL（克曼旅館）</div>
+      <div class="row__sub">台北市萬華区西寧南路77号・MRT西門駅から徒歩約7分</div>
+      <div class="row__sub">チェックイン 15:00以降／チェックアウト 11:00まで・荷物預かりあり</div>
+      <div class="buttons">
+        <a class="btn btn--tinted" href="https://www.comma-hotel.com/?lang=ja" target="_blank" rel="noopener">公式サイト</a>
+        <a class="btn btn--gray" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=COMMA%20BOUTIQUE%20HOTEL&query_place_id=ChIJBa2MkVqpQjQRTJSgrK748WA">地図</a>
+      </div>
+    </div></div>
+  </div>
+
+  <div class="group-header">ホテルを中心にした位置関係</div>
+  <div id="map-overview" class="map" role="region" aria-label="位置関係の地図"></div>
+  <div class="legend"><span><i style="background:var(--bruna-red)"></i>ホテル</span><span><i style="background:var(--bruna-gray)"></i>駅・バス停</span><span><i style="background:var(--bruna-blue)"></i>スポット</span></div>
+  <p class="group-footer">点線の円は半径約1km（徒歩圏）。遠方：寧夏夜市 約1.6km／南門市場・中正紀念堂 南東約2km／台北101 東約6km／九份 東約40km／桃園空港 西約30km。</p>
+</section>
+
+<!-- ========== 準備 ========== -->
+<section class="panel" id="prep" aria-label="準備">
+  <h1 class="large-title">準備</h1>
+  <p class="footnote">チェックはこの端末のブラウザにだけ保存されます。同行者とは共有されません。</p>
+
+  <div class="group-header">出発前</div>
+  <div class="group" data-checks="before"></div>
+  <div class="buttons" style="margin:var(--space-3) 0 0">
+    <a class="btn btn--tinted" href="https://jp.world-esim.com/stores/taiwan?esaf=HUZCEFT4&utm_source=kakaku.com&utm_medium=referral&utm_campaign=taiwan" target="_blank" rel="noopener">World eSIM</a>
+    <a class="btn btn--gray" href="https://en.youbike.com.tw/region/main/" target="_blank" rel="noopener">YouBike</a>
+  </div>
+
+  <div class="group-header">桃園空港に着いたら</div>
+  <div class="group" data-checks="airport"></div>
+  <p class="group-footer">悠遊カードの買い方は「移動」タブを参照。</p>
+
+  <div class="group-header">現地で</div>
+  <div class="group" data-checks="local"></div>
+
+</section>
+
+<!-- ========== Day1 ========== -->
+<section class="panel" id="day1" aria-label="Day1">
+  <div class="hero hero--red">
+    <div class="hero__eyebrow">DAY 1・11/12 木</div>
+    <div class="hero__title">夜市の日</div>
+    <p>空港から台北へ。夜は2つの夜市から選ぶ。</p>
+  </div>
+  <div class="group-header">タイムライン</div>
+  <div class="group" data-timeline="day1"></div>
+
+  <div class="group-header">ルートマップ</div>
+  <div id="map-day1" class="map" role="region" aria-label="Day1の地図"></div>
+  <p class="group-footer">点線は移動順（台北駅A1 → ホテル → 華西街夜市）。寧夏夜市はもう一つの候補。</p>
+
+  <div class="group-header">夜市の候補</div>
+  <div class="group">
+    <div class="row"><div class="num">1</div><div class="row__main">
+      <div class="headline">華西街観光夜市</div><span class="tag">16:00–24:00</span>
+      <p class="desc">ホテルから徒歩圏。龍山寺のそばで、アーケードの中の屋台と軽食。近さ重視ならこちら。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://www.travel.taipei/ja/attraction/details/1701" target="_blank" rel="noopener">紹介ページ</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=%E8%8F%AF%E8%A5%BF%E8%A1%97%E8%A7%80%E5%85%89%E5%A4%9C%E5%B8%82&query_place_id=ChIJa_nIQKmpQjQROfvCKC0Y7mo" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num">2</div><div class="row__main">
+      <div class="headline">寧夏夜市</div><span class="tag">17:00–23:30</span>
+      <p class="desc">台湾の伝統的な屋台料理が中心。1本道に屋台がまとまっていて食べ歩きしやすい。Uberで約10分。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://www.travel.taipei/ja/attraction/details/1702" target="_blank" rel="noopener">紹介ページ</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=%E5%AF%A7%E5%A4%8F%E5%A4%9C%E5%B8%82&query_place_id=ChIJxUXPVmupQjQRtBB6oj-S5qI" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ========== Day2 ========== -->
+<section class="panel" id="day2" aria-label="Day2">
+  <div class="hero hero--green">
+    <div class="hero__eyebrow">DAY 2・11/13 金</div>
+    <div class="hero__title">総統府 → 九份</div>
+    <p>午前は台北市内、昼から965番バスで九份へ。</p>
+  </div>
+  <div class="group-header">タイムライン</div>
+  <div class="group" data-timeline="day2"></div>
+
+  <div class="group-header">台北市内マップ</div>
+  <div id="map-day2" class="map" role="region" aria-label="Day2 台北市内の地図"></div>
+  <p class="group-footer">点線は移動順（ホテル → 総統府 → 二二八和平公園 → 965番バス停）。</p>
+
+  <div class="banner banner--info" style="margin-top:var(--space-3)"><div><b>965番バス停への行き方</b><br>MRT西門駅2番出口 → 横断歩道を渡る → 左側のバス停。行き先は「金瓜石」。電光掲示板で到着までの分数を確認し、来たら手を挙げて乗る。</div></div>
+
+  <div class="group-header">九份マップ</div>
+  <div id="map-jiufen" class="map" role="region" aria-label="九份の地図"></div>
+  <p class="group-footer">九份は台北市内から東へ約40km（965番バスで約75分）。帰りは坂の上の「九份老街」バス停から。</p>
+
+  <div class="group-header">スポット</div>
+  <div class="group">
+    <div class="row"><div class="num">1</div><div class="row__main">
+      <div class="headline">総統府</div><span class="tag">平日 9:00–12:00・入館は11:30まで</span>
+      <p class="desc">日本統治時代（1919年）の総督府の建物。個人は予約不要、写真付き身分証（パスポート）が必要。見学は1階の展示と回廊。見学者入口は3号門（宝慶路と博愛路の角）。大きな荷物・飲食物・ガムは持ち込み不可。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://www.travel.taipei/ja/attraction/details/800" target="_blank" rel="noopener">紹介ページ</a><a class="btn btn--gray" href="https://english.president.gov.tw/Page/6" target="_blank" rel="noopener">見学案内（公式）</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=%E7%B8%BD%E7%B5%B1%E5%BA%9C&query_place_id=ChIJJXNJjQqpQjQR-UfWtMFthwI" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num">2</div><div class="row__main">
+      <div class="headline">二二八和平公園</div><span class="tag">24時間</span>
+      <p class="desc">総統府から徒歩数分の大きな公園。国立台湾博物館が隣接。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://www.travel.taipei/ja/attraction/details/748" target="_blank" rel="noopener">紹介ページ</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=228%20Peace%20Park&query_place_id=ChIJKX1kH3WpQjQRcyy76pvtt-s" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num num--transit">3</div><div class="row__main">
+      <div class="headline">965番バス乗り場（捷運西門站）</div><span class="tag">90元・悠遊カード</span>
+      <p class="desc">西門駅2番出口から徒歩2分。乗車時と降車時の両方でタッチ。平日6:00–21:00、30〜60分おき。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://travel.willer.co.jp/willer-colle/8779/" target="_blank" rel="noopener">乗り方の解説</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=Ximen%20Station%20bus%20965&query_place_id=ChIJrxCc-wmpQjQRRf2iOGRw7PI" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num">4</div><div class="row__main">
+      <div class="headline">九份老街</div><span class="tag">店舗 10:00–20:00目安</span>
+      <p class="desc">金鉱の町として栄えた山あいの町。石段の路地と提灯の街並み。雨が降りやすいので、歩きやすい靴とレインコートを。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://www.funliday.com/posts/jiufen-1day-spots/" target="_blank" rel="noopener">紹介ページ</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=%E4%B9%9D%E4%BB%BD%E8%80%81%E8%A1%97&query_place_id=ChIJcZT7-hdFXTQR0qekplqCFV8" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num">5</div><div class="row__main">
+      <div class="headline">阿妹茶樓</div><span class="tag">9:00–21:30</span>
+      <p class="desc">九份を代表する茶藝館。お茶とお茶菓子で休憩、茶葉のお土産も。</p>
+      <div class="buttons"><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=%E9%98%BF%E5%A6%B9%E8%8C%B6%E6%A8%93&query_place_id=ChIJsSYt4BdFXTQRquCsN8eG7BE" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ========== Day3 ========== -->
+<section class="panel" id="day3" aria-label="Day3">
+  <div class="hero hero--yellow">
+    <div class="hero__eyebrow">DAY 3・11/14 土</div>
+    <div class="hero__title">南門市場 → 101 → 帰国</div>
+    <p>屋内中心で買い物。14:30ホテル出発。</p>
+  </div>
+  <div class="group-header">タイムライン</div>
+  <div class="group" data-timeline="day3"></div>
+
+  <div class="group-header">ルートマップ</div>
+  <div id="map-day3" class="map" role="region" aria-label="Day3の地図"></div>
+  <p class="group-footer">点線は移動順（ホテル → 南門市場 → 中正紀念堂 → 101 → 万家福 → ホテル → 台北駅A1）。茶色の＋は余裕があれば。</p>
+
+  <div class="group-header">スポット</div>
+  <div class="group">
+    <div class="row"><div class="num">1</div><div class="row__main">
+      <div class="headline">南門市場</div><span class="tag">7:00–19:00・月曜休み</span>
+      <p class="desc">台北の台所と呼ばれる市場。地下1階は生鮮、1階は乾物・加工食品、2階はフードコート。MRT中正紀念堂駅2番出口のすぐ横。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://rurubu.jp/andmore/article/20395" target="_blank" rel="noopener">紹介ページ</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=%E5%8D%97%E9%96%80%E5%B8%82%E5%A0%B4&query_place_id=ChIJYc6aBCipQjQRhBT3qZzWX5c" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num">2</div><div class="row__main">
+      <div class="headline">中正紀念堂</div><span class="tag">9:00–18:00</span>
+      <p class="desc">青と白の大きな紀念堂と広場。南門市場から徒歩すぐ。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://www.travel.taipei/ja/attraction/details/741" target="_blank" rel="noopener">紹介ページ</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=%E4%B8%AD%E6%AD%A3%E7%B4%80%E5%BF%B5%E5%A0%82&query_place_id=ChIJTamiuZ2pQjQRsmnfkkID6UM" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num">3</div><div class="row__main">
+      <div class="headline">台北101ショッピングセンター</div><span class="tag">土 11:00–22:00</span>
+      <p class="desc">地下にフードコートとスーパー（Mia C'bon）。雨でも屋内で完結。中正紀念堂駅からMRT赤線で乗り換えなし。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://www.travel.taipei/ja/attraction/details/840" target="_blank" rel="noopener">紹介ページ</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=Taipei%20101%20Shopping%20center&query_place_id=ChIJraeA2rarQjQRPBBjyR3RxKw" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num num--opt">＋</div><div class="row__main">
+      <div class="headline">国父紀念館（余裕があれば）</div><span class="tag">改修中</span>
+      <p class="desc">大会堂は2026年末まで改修中で中に入れない。外観と、池に映る101の写真スポットとして。101から徒歩圏。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://www.travel.taipei/ja/attraction/details/742" target="_blank" rel="noopener">紹介ページ</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=%E5%9C%8B%E7%88%B6%E7%B4%80%E5%BF%B5%E9%A4%A8&query_place_id=ChIJwyJxyO6pQjQRilcOb_lBRr4" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num">4</div><div class="row__main">
+      <div class="headline">万家福（旧カルフール）桂林店</div><span class="tag">24時間</span>
+      <p class="desc">最終日の買い足しに。詳しくは「お土産」タブ。</p>
+      <div class="buttons"><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=Carrefour%20Guilin&query_place_id=ChIJZfLxBKepQjQRKWVPxv7a9aI" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ========== 移動 ========== -->
+<section class="panel" id="transit" aria-label="移動">
+  <h1 class="large-title">移動</h1>
+
+  <div class="group-header">購入方法</div>
+  <div class="group">
+    <div class="step"><div class="num">1</div><div class="row__main"><div class="headline">券売機へ</div><div class="row__sub">空港MRT 桃園空港駅（第1ターミナルはA12）の入口前の券売機。台北MRTの各駅でも同じ。</div></div></div>
+    <div class="step"><div class="num">2</div><div class="row__main"><div class="headline">カードを買う</div><div class="row__sub">画面で「悠遊カード」を選び、100元を入れるとカードが出る。100元札のみ・おつりなしの機械があるので、100元札を用意。</div></div></div>
+    <div class="step"><div class="num">3</div><div class="row__main"><div class="headline">チャージ</div><div class="row__sub">100元はカード代だけで残高は0。続けて現金でチャージ（クレジットカード不可）。目安700元＝空港MRT往復320元＋965番バス往復180元＋市内MRT・予備。</div></div></div>
+    <div class="step"><div class="num">4</div><div class="row__main"><div class="headline">乗る</div><div class="row__sub">改札やバスの読み取り機にタッチ。</div></div></div>
+  </div>
+  <div class="buttons" style="margin:var(--space-3) 0 0"><a class="btn btn--tinted" href="https://www.tripool.app/ja/articles/how-to-buy-easy-card-taiwan" target="_blank" rel="noopener">買い方の解説</a></div>
+
+  <p class="group-footer">補足：空港MRTのサービスブース（8:00–21:30）やコンビニでも購入・チャージ可能。台北MRTではクレジットカードのタッチ決済にも対応しています。</p>
+
+  <div class="group-header">空港MRT</div>
+  <div class="group"><div class="row"><div class="row__main">
+    <div class="row__title">桃園空港T1（A12）⇄ 台北駅（A1）</div>
+    <div class="row__sub">快速で約36分、160元。快速は約15分間隔、20時以降は30分間隔。台北駅A1からホテルまで徒歩15〜20分。</div>
+    <div class="buttons"><a class="btn btn--tinted" href="https://esim.holafly.com/ja/guides-travel/taoyuan-airport-to-taipei-main-station/" target="_blank" rel="noopener">詳しい解説</a></div>
+  </div></div></div>
+
+  <div class="group-header">965番バス（九份行き）</div>
+  <div class="group"><div class="row"><div class="row__main">
+    <div class="row__title">捷運西門站 → 九份老街</div>
+    <div class="row__sub">片道90元。悠遊カードで乗車時・降車時の両方でタッチ。平日6:00–21:00、30〜60分おき。行き先「金瓜石」を確認。</div>
+  </div></div></div>
+
+  <div class="group-header">YouBike</div>
+  <div class="group"><div class="row"><div class="row__main">
+    <div class="row__title">「Single Rental」で登録</div>
+    <div class="row__sub">メールアドレスとクレジットカードで登録。3,000元のデポジットが預けられ、120時間使える（期間後に返金）。11/12に登録すれば最終日まで使える。</div>
+    <div class="buttons"><a class="btn btn--tinted" href="https://www.teradas.jp/archives/48058/" target="_blank" rel="noopener">登録手順</a><a class="btn btn--gray" href="https://en.youbike.com.tw/region/main/" target="_blank" rel="noopener">公式サイト</a></div>
+  </div></div></div>
+
+  <div class="group-header">Uber</div>
+  <div class="group"><div class="row"><div class="row__main">
+    <div class="row__sub">雨の日や荷物があるときに。電話番号認証とカード登録は出発前に。</div>
+  </div></div></div>
+</section>
+
+<!-- ========== お土産 ========== -->
+<section class="panel" id="souvenir" aria-label="お土産">
+  <h1 class="large-title">お土産</h1>
+  <div id="map-souvenir" class="map" role="region" aria-label="お土産の地図"></div>
+
+  <div class="group-header">ホテル周辺（西門）</div>
+  <div class="group">
+    <div class="row"><div class="num">1</div><div class="row__main">
+      <div class="headline">万家福（旧カルフール）桂林店</div><span class="tag">24時間</span>
+      <p class="desc">西門エリアの大型店。お土産コーナーあり。最終日の買い足しに。</p>
+      <div class="buttons"><a class="btn btn--tinted" href="https://newt.net/twn/mag-699147402" target="_blank" rel="noopener">紹介ページ</a><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=Carrefour%20Guilin&query_place_id=ChIJZfLxBKepQjQRKWVPxv7a9aI" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num">2</div><div class="row__main">
+      <div class="headline">全聯 萬華長沙店</div><span class="tag">8:00–23:00</span>
+      <p class="desc">地元のスーパー。海外のカードが通らないという口コミがあるので、現金か悠遊カードで払う。</p>
+      <div class="buttons"><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=PX%20Mart%20Changsha&query_place_id=ChIJpeKM9KepQjQRpvm8bfhtyzA" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num">3</div><div class="row__main">
+      <div class="headline">全聯 萬華柳州店</div><span class="tag">8:00–23:00</span>
+      <p class="desc">同上。万家福 桂林店のすぐ近く。</p>
+      <div class="buttons"><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=PX%20Mart%20Liuzhou&query_place_id=ChIJ-XCrZUSpQjQRd1n9BICRWgw" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+  </div>
+
+  <div class="group-header">南（Day3の朝）</div>
+  <div class="group">
+    <div class="row"><div class="num">4</div><div class="row__main">
+      <div class="headline">南門市場</div><span class="tag">月曜休み</span>
+      <p class="desc">1階の乾物（ドライフルーツ・ナッツ）が狙い目。</p>
+      <div class="buttons"><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=%E5%8D%97%E9%96%80%E5%B8%82%E5%A0%B4&query_place_id=ChIJYc6aBCipQjQRhBT3qZzWX5c" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+  </div>
+
+  <div class="group-header">東（Day3の昼）</div>
+  <div class="group">
+    <div class="row"><div class="num">5</div><div class="row__main">
+      <div class="headline">Mia C'bon 台北101店</div><span class="tag">9:00–22:00</span>
+      <p class="desc">101地下、フードコートの隣。少し高めだが土産向けの品がまとまっている。</p>
+      <div class="buttons"><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=Mia%20C%27bon%20Taipei%20101&query_place_id=ChIJH7fiEdyrQjQRI22LeUAySBc" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+    <div class="row"><div class="num num--opt">6</div><div class="row__main">
+      <div class="headline">佳德糕餅（任意）</div><span class="tag">8:30–20:30</span>
+      <p class="desc">パイナップルケーキの有名店。行列ができるので、確実に買うなら事前予約。</p>
+      <div class="buttons"><a class="btn btn--gray" href="https://www.google.com/maps/search/?api=1&query=Chia%20Te%20Bakery&query_place_id=ChIJdzzG5pSrQjQR8r_CfyXqf7U" target="_blank" rel="noopener">地図</a></div>
+    </div></div>
+  </div>
+
+  <div class="group-header">九份（Day2）</div>
+  <div class="group">
+    <div class="row"><div class="row__main">
+      <div class="headline">阿妹茶樓・老街の茶葉店</div>
+      <p class="desc">お茶とお茶菓子。</p>
+    </div></div>
+  </div>
+
+  <div class="group-header">買うものの例</div>
+  <div class="group"><div class="row"><div class="row__main"><div class="row__sub">パイナップルケーキ、台湾茶のティーバッグ（東方美人茶など）、ヌガークラッカー、ドライマンゴー、沙茶醤</div></div></div></div>
+</section>
+
+<!-- ========== 天気 ========== -->
+<section class="panel" id="weather" aria-label="天気">
+  <h1 class="large-title">天気</h1>
+  <div class="group-header">台北市</div>
+  <div class="weather" id="weather-taipei"></div>
+  <div class="group-header">京都市（出発・帰着）</div>
+  <div class="weather" id="weather-kyoto"></div>
+  <p class="group-footer" id="weather-status" aria-live="polite">インターネットから最新の予報を取得しています。</p>
+  <p class="group-footer">予報データ：Open-Meteo。ページを開くたびにインターネット経由で取得します。</p>
+</section>
+</main>
+
+<footer class="footer">
+  情報源：<a href="https://www.travel.taipei/ja" target="_blank" rel="noopener">台北観光サイト</a>・<a href="https://english.president.gov.tw/Page/6" target="_blank" rel="noopener">総統府</a>・<a href="https://rurubu.jp/andmore/article/20395" target="_blank" rel="noopener">るるぶ&amp;more.</a>・<a href="https://travel.willer.co.jp/willer-colle/8779/" target="_blank" rel="noopener">WILLER</a>・<a href="https://www.tripool.app/ja/articles/how-to-buy-easy-card-taiwan" target="_blank" rel="noopener">tripool</a>・<a href="https://esim.holafly.com/ja/guides-travel/taoyuan-airport-to-taipei-main-station/" target="_blank" rel="noopener">Holafly</a>・<a href="https://www.teradas.jp/archives/48058/" target="_blank" rel="noopener">TeraDas</a>・<a href="https://newt.net/twn/mag-699147402" target="_blank" rel="noopener">NEWT</a>・<a href="https://www.funliday.com/posts/jiufen-1day-spots/" target="_blank" rel="noopener">Funliday</a><br>
+  地図データ：© OpenStreetMap contributors。営業時間・運行状況は変わることがあります。
+</footer>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+(function(){
+"use strict";
+
+/* ---------- データ ---------- */
+const P={
+ H:{name:"COMMA Boutique Hotel",lat:25.0459303,lon:121.5069860,id:"ChIJBa2MkVqpQjQRTJSgrK748WA",type:"hotel"},
+ A1:{name:"台北駅（空港MRT A1）",lat:25.04882,lon:121.51375,id:"ChIJlWImqHKpQjQREk5-6lec4-w",type:"transit"},
+ night1:{name:"華西街観光夜市",lat:25.0385988,lon:121.4984426,id:"ChIJa_nIQKmpQjQROfvCKC0Y7mo"},
+ night2:{name:"寧夏夜市",lat:25.0566808,lon:121.5153641,id:"ChIJxUXPVmupQjQRtBB6oj-S5qI"},
+ pres:{name:"総統府（3号門）",lat:25.0399991,lon:121.5119507,id:"ChIJJXNJjQqpQjQR-UfWtMFthwI"},
+ park:{name:"二二八和平公園",lat:25.0415717,lon:121.5150295,id:"ChIJKX1kH3WpQjQRcyy76pvtt-s"},
+ bus:{name:"965番バス停（捷運西門站）",lat:25.040033,lon:121.507934,id:"ChIJrxCc-wmpQjQRRf2iOGRw7PI",type:"transit"},
+ mrt:{name:"MRT西門駅",lat:25.0421,lon:121.5081,type:"transit"},
+ jiufen:{name:"九份老街",lat:25.109806,lon:121.845223,id:"ChIJcZT7-hdFXTQR0qekplqCFV8"},
+ ame:{name:"阿妹茶樓",lat:25.1085634,lon:121.8436065,id:"ChIJsSYt4BdFXTQRquCsN8eG7BE"},
+ south:{name:"南門市場",lat:25.0324803,lon:121.5180034,id:"ChIJYc6aBCipQjQRhBT3qZzWX5c"},
+ cks:{name:"中正紀念堂",lat:25.035502,lon:121.5201832,id:"ChIJTamiuZ2pQjQRsmnfkkID6UM"},
+ t101:{name:"台北101ショッピングセンター",lat:25.0341222,lon:121.5640212,id:"ChIJraeA2rarQjQRPBBjyR3RxKw"},
+ sun:{name:"国父紀念館（改修中）",lat:25.0400306,lon:121.5602452,id:"ChIJwyJxyO6pQjQRilcOb_lBRr4",type:"opt"},
+ carrefour:{name:"万家福（旧カルフール）桂林店",lat:25.0376995,lon:121.5062259,id:"ChIJZfLxBKepQjQRKWVPxv7a9aI"},
+ px1:{name:"全聯 萬華長沙店",lat:25.0402921,lon:121.5040214,id:"ChIJpeKM9KepQjQRpvm8bfhtyzA"},
+ px2:{name:"全聯 萬華柳州店",lat:25.0372695,lon:121.5049680,id:"ChIJ-XCrZUSpQjQRd1n9BICRWgw"},
+ mia:{name:"Mia C'bon 台北101店",lat:25.0334861,lon:121.5648594,id:"ChIJH7fiEdyrQjQRI22LeUAySBc"},
+ bakery:{name:"佳德糕餅（任意）",lat:25.0512434,lon:121.5614407,id:"ChIJdzzG5pSrQjQR8r_CfyXqf7U",type:"opt"}
+};
+
+const MAPS={
+ "map-overview":{panel:"overview",items:[["H","H"],["A1","A1"],["pres","1"],["park","2"],["bus","965"],["night1","3"],["carrefour","4"],["night2","5"]],circle:1000},
+ "map-day1":{panel:"day1",items:[["A1","A1"],["H","H"],["night1","1"],["night2","2"]],route:["A1","H","night1"]},
+ "map-day2":{panel:"day2",items:[["H","H"],["pres","1"],["park","2"],["bus","3"],["mrt","M"]],route:["H","pres","park","bus"]},
+ "map-jiufen":{panel:"day2",items:[["jiufen","4"],["ame","5"]],minZoom:16},
+ "map-day3":{panel:"day3",items:[["H","H"],["south","1"],["cks","2"],["t101","3"],["sun","＋"],["carrefour","4"],["A1","A1"]],route:["H","south","cks","t101","carrefour","H","A1"]},
+ "map-souvenir":{panel:"souvenir",items:[["H","H"],["carrefour","1"],["px1","2"],["px2","3"],["south","4"],["mia","5"],["bakery","6"]]}
+};
+
+const TIMELINES={
+ day1:[
+  ["11:00","京都駅八条口 → リムジンバスで関空","前後の便も選べる"],
+  ["12:30","関空第1ターミナル着、ジェットスターのカウンターでチェックイン",""],
+  ["14:10","チェックイン締切","14:15には搭乗口へ","締切"],
+  ["14:55","GK55 出発","台湾は日本より1時間遅れ"],
+  ["17:15","桃園第1ターミナル着 → 入国審査・荷物",""],
+  ["18:30","地下2階 A12駅へ：悠遊カード・eSIM","地下1階フードコートのエスカレーターで下へ"],
+  ["19:15","空港MRT 快速（〜19:30）","20時以降は快速が30分間隔になる","注意"],
+  ["20:10","台北駅A1 → 徒歩15〜20分",""],
+  ["20:30","ホテルにチェックイン",""],
+  ["21:00","夜市へ（どちらか）",""]],
+ day2:[
+  ["8:30","ホテル周辺で朝食",""],
+  ["9:15","総統府 見学（3号門）","パスポート持参・入館は11:30まで","注意"],
+  ["10:30","二二八和平公園・国立台湾博物館の周辺を散歩",""],
+  ["11:15","西門で昼食",""],
+  ["12:00","965番バスで九份へ（捷運西門站）","悠遊カードで乗車時・降車時にタッチ／90元"],
+  ["13:15","九份老街 到着・散策",""],
+  ["17:00","提灯が灯る時間帯",""],
+  ["18:30","帰りのバス（坂の上の「九份老街」から）","平日の運行は21時まで","注意"],
+  ["19:45","西門に戻って夕食",""]],
+ day3:[
+  ["〜9:00","チェックアウト・荷物を預ける",""],
+  ["9:15","南門市場：朝ごはんと乾物のお土産","MRT中正紀念堂駅2番出口のすぐ横"],
+  ["10:30","中正紀念堂",""],
+  ["11:15","MRT赤線で台北101へ（乗り換えなし）",""],
+  ["11:45","101で昼食・地下のMia C'bonでお土産",""],
+  ["13:15","西門に戻り、万家福（旧カルフール）桂林店で買い足し",""],
+  ["14:15","ホテルで荷物を受け取る",""],
+  ["14:30","ホテル出発 → 台北駅A1 → 空港MRT快速（14:45頃）","","注意"],
+  ["15:30","桃園第1ターミナル着 → チェックイン・出国審査",""],
+  ["16:15","空港でお土産・免税店",""],
+  ["17:30","チェックイン締切","17:35には搭乗口へ","締切"],
+  ["18:15","GK54 出発 → 21:45 関空T1着",""],
+  ["22:30","京都行きリムジンバス","22:30／23:00発などから選ぶ"]]
+};
+
+const CHECKS={
+ before:[["arrival","台湾オンライン入国カード登録"],["esim","World eSIM（3日間無制限）を購入・インストール"],["uber","Uber：電話番号認証・カード登録"],["ubike-app","YouBike 2.0 アプリをダウンロード"],["card","クレジットカードの海外利用設定を確認"],["flight","GK55 14:55発／GK54 18:15発を確認"],["passport","パスポート（Day2の総統府見学でも使う）"],["rain","雨具・薄手の上着（Day3は雨予報、九份は雨が多い）"]],
+ airport:[["easycard","悠遊カードを購入して700元チャージ"],["esim-on","eSIMを有効化"]],
+ local:[["ubike-reg","YouBike「Single Rental」登録（11/12に。120時間有効）"]]
+};
+
+/* ---------- ヘルパー ---------- */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const gmap=p=>"https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(p.name)+(p.id?"&query_place_id="+p.id:"");
+let store=null;try{store=window.localStorage;store.setItem("__t","1");store.removeItem("__t");}catch(e){store=null;}
+
+/* ---------- タイムライン ---------- */
+document.querySelectorAll("[data-timeline]").forEach(el=>{
+ const rows=TIMELINES[el.dataset.timeline]||[];
+ el.innerHTML=rows.map(r=>`<div class="row row--indent"><div class="time">${esc(r[0])}</div><div class="row__main"><div class="row__title">${r[3]?`<span class="badge badge--warn">${esc(r[3])}</span>`:""}${esc(r[1])}</div>${r[2]?`<div class="row__sub">${esc(r[2])}</div>`:""}</div></div>`).join("");
+});
+
+/* ---------- チェックリスト ---------- */
+document.querySelectorAll("[data-checks]").forEach(el=>{
+ const items=CHECKS[el.dataset.checks]||[];
+ el.innerHTML=items.map(([id,label])=>{
+  const key="taipei-shiori:"+id;let on=false;
+  if(store){try{on=store.getItem(key)==="1";}catch(e){}}
+  return `<label class="check"><input type="checkbox" data-key="${key}" ${on?"checked":""}><span>${esc(label)}</span></label>`;
+ }).join("");
+ el.querySelectorAll("input").forEach(inp=>inp.addEventListener("change",()=>{if(store){try{store.setItem(inp.dataset.key,inp.checked?"1":"0");}catch(e){}}}));
+});
+
+/* ---------- 地図 ---------- */
+const maps={};
+function pinIcon(label,type){
+ const cls=type==="hotel"?"pin--hotel":type==="transit"?"pin--transit":type==="opt"?"pin--opt":"pin--spot";
+ const w=label.length>2?40:29;
+ return L.divIcon({className:"",html:`<div class="pin ${cls}" style="width:${w}px">${esc(label)}</div>`,iconSize:[w,29],iconAnchor:[w/2,15],popupAnchor:[0,-14]});
+}
+function fallback(el,cfg){
+ el.innerHTML=`<div class="map-fallback">地図を読み込めませんでした。下のリンクからGoogleマップで開けます。<br>${cfg.items.map(([k,l])=>`<a href="${gmap(P[k])}" target="_blank" rel="noopener">${esc(l)} ${esc(P[k].name)}</a>`).join("<br>")}</div>`;
+ el.style.height="auto";
+}
+function buildMap(id){
+ const cfg=MAPS[id],el=document.getElementById(id);
+ if(!el||maps[id])return;
+ if(!window.L){fallback(el,cfg);maps[id]={failed:true};return;}
+ const map=L.map(el,{scrollWheelZoom:false,zoomControl:true,zoomSnap:0.25});maps[id]={failed:true};
+ const tiles=L.tileLayer("https://tile.openstreetmap.de/{z}/{x}/{y}.png",{maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map);
+ tiles.on("tileerror",()=>{if(!el.dataset.tileErrorShown){el.dataset.tileErrorShown="1";const note=document.createElement("div");note.className="map-fallback";note.innerHTML=`地図画像の配信元に接続できません。<a href="${gmap(P[cfg.items[0][0]])}" target="_blank" rel="noopener">Googleマップで開く</a>`;el.appendChild(note);}});
+ const pts=[];
+ cfg.items.forEach(([k,label])=>{const p=P[k];const ll=[p.lat,p.lon];pts.push(ll);
+  L.marker(ll,{icon:pinIcon(label,p.type),title:p.name,alt:p.name}).addTo(map)
+   .bindPopup(`<b>${esc(p.name)}</b><br><a href="${gmap(p)}" target="_blank" rel="noopener">Googleマップで開く</a>`);});
+ if(cfg.route){L.polyline(cfg.route.map(k=>[P[k].lat,P[k].lon]),{color:getComputedStyle(document.documentElement).getPropertyValue("--bruna-blue").trim()||"#004c97",weight:3,dashArray:"6 7",opacity:.9}).addTo(map);}
+ let bounds=L.latLngBounds(pts);
+ if(cfg.circle){const c=L.latLng(P.H.lat,P.H.lon);L.circle(c,{radius:cfg.circle,color:"#737061",weight:1.5,dashArray:"5 6",fill:false}).addTo(map);bounds=bounds.extend(c.toBounds(cfg.circle*2));}
+ maps[id]={map,bounds,cfg};
+}
+function fitPanelMaps(panelId){
+ Object.keys(MAPS).forEach(id=>{
+  if(MAPS[id].panel!==panelId)return;
+  buildMap(id);
+  const m=maps[id];if(!m||m.failed)return;
+  requestAnimationFrame(()=>{m.map.invalidateSize();m.map.fitBounds(m.bounds,{padding:[28,28],maxZoom:m.cfg.minZoom||17});});
+ });
+}
+
+/* ---------- 天気 ---------- */
+const WD=["日","月","火","水","木","金","土"];
+const codeText=c=>c===0?"快晴":c<=2?"晴れ時々くもり":c===3?"くもり":(c===45||c===48)?"霧":((c>=51&&c<=67)||(c>=80&&c<=82))?"雨":((c>=71&&c<=77)||c===85||c===86)?"雪":c>=95?"雷雨":"—";
+const codeIcon=c=>c===0?"☀":c<=2?"🌤":c===3?"☁":(c===45||c===48)?"🌫":((c>=51&&c<=67)||(c>=80&&c<=82))?"🌧":((c>=71&&c<=77)||c===85||c===86)?"❄":"⛈";
+function renderWeather(elId,hourly,tz){
+ const byDate={};
+ hourly.time.forEach((time,i)=>{
+  const hour=Number(time.slice(11,13));
+  if(hour%3!==0)return;
+  const date=time.slice(0,10);
+  (byDate[date] ||= []).push({hour,temp:hourly.temperature_2m[i],code:hourly.weather_code[i],rain:hourly.precipitation_probability?.[i]});
+ });
+ const dates=Object.keys(byDate).sort();
+ document.getElementById(elId).innerHTML=dates.map(date=>{
+  const d=new Date(date+"T12:00:00");
+  const items=byDate[date].map(v=>`<div class="weather-hour"><div class="weather-hour__time">${String(v.hour).padStart(2,"0")}:00</div><div class="weather-hour__icon" aria-label="${codeText(v.code)}">${codeIcon(v.code)}</div><div class="weather-hour__temp">${Math.round(v.temp)}°</div><div class="weather-hour__desc">${codeText(v.code)}</div></div>`).join("");
+  return `<div class="weather-day"><div class="weather-day__title">${d.getMonth()+1}/${d.getDate()}（${WD[d.getDay()]}）</div><div class="weather-hours">${items}</div></div>`;
+ }).join("");
+}
+async function fetchCity(lat,lon,tz){
+ const url=`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weather_code,precipitation_probability&temperature_unit=celsius&timezone=${encodeURIComponent(tz)}&start_date=2026-11-12&end_date=2026-11-14`;
+ const r=await fetch(url,{cache:"no-store"});if(!r.ok)throw new Error("weather");
+ const d=await r.json();if(!d.hourly||!d.hourly.time||!d.hourly.time.length)throw new Error("range");
+ return d.hourly;
+}
+async function loadWeather(){
+ const status=document.getElementById("weather-status");
+ const loading='<div class="weather-message">3時間ごとの予報を取得しています…</div>';
+ document.getElementById("weather-taipei").innerHTML=loading;
+ document.getElementById("weather-kyoto").innerHTML=loading;
+ try{
+  const [tp,ky]=await Promise.all([
+   fetchCity(25.0418,121.5065,"Asia/Taipei"),
+   fetchCity(35.0116,135.7681,"Asia/Tokyo")
+  ]);
+  renderWeather("weather-taipei",tp,"Asia/Taipei");
+  renderWeather("weather-kyoto",ky,"Asia/Tokyo");
+  status.textContent="最終取得："+new Intl.DateTimeFormat("ja-JP",{timeZone:"Asia/Tokyo",month:"numeric",day:"numeric",hour:"2-digit",minute:"2-digit"}).format(new Date())+"（日本時間）／3時間ごと";
+ }catch(e){
+  const message='<div class="weather-message">予報を取得できませんでした。インターネット接続を確認して再読み込みしてください。</div>';
+  document.getElementById("weather-taipei").innerHTML=message;
+  document.getElementById("weather-kyoto").innerHTML=message;
+  status.textContent="天気データの取得に失敗しました。";
+ }
+}
+
+/* ---------- タブ ---------- */
+const tabs=[...document.querySelectorAll(".tab")],panels=[...document.querySelectorAll(".panel")];
+function currentHash(){try{return (location.hash||"").slice(1);}catch(e){return "";}}
+function activate(want){
+ let id=typeof want==="string"?want:currentHash();
+ if(!panels.some(p=>p.id===id))id="overview";
+ panels.forEach(p=>p.classList.toggle("active",p.id===id));
+ tabs.forEach(t=>{const on=t.hash==="#"+id;t.setAttribute("aria-selected",on?"true":"false");if(on&&t.scrollIntoView){try{t.scrollIntoView({block:"nearest",inline:"center"});}catch(e){}}});
+ fitPanelMaps(id);
+ window.scrollTo(0,0);
+}
+tabs.forEach(t=>t.addEventListener("click",e=>{
+ e.preventDefault();
+ const id=t.getAttribute("href").slice(1);
+ activate(id);
+ try{history.replaceState(null,"","#"+id);}catch(err){}
+}));
+window.addEventListener("hashchange",()=>activate());
+activate();
+loadWeather();
+})();
+</script>
+</body>
+</html>
